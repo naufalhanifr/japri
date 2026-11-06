@@ -64,7 +64,7 @@ Skenario utama (alur langkah demi langkah):
 |----|-------------|----------------------------------|
 | FR-1 | Login dengan dua peran: admin dan pegawai. Hanya admin yang bisa menambah, mengubah, atau membatalkan booking. | Must |
 | FR-2 | Admin dapat **menambah driver baru**, mengubah data driver, dan menonaktifkan driver. Driver yang nonaktif tidak muncul di daftar kosong dan tidak bisa dibooking. | Must |
-| FR-3 | Admin dapat membuat booking dengan driver, tanggal, jam mulai dan selesai, tujuan, dan nama pemesan. | Must |
+| FR-3 | Admin dapat membuat booking dengan satu pegawai dan satu driver, tanggal, jam mulai dan selesai, tujuan, dan nama pemesan. Satu booking dapat mencakup beberapa hari. | Must |
 | FR-4 | Sistem mencegah booking ganda: satu driver tidak bisa dibooking dua kali pada rentang waktu yang bertabrakan. | Must |
 | FR-5 | Dashboard menampilkan status setiap driver (kosong atau terbooking) dan jadwalnya untuk hari ini dan rentang tanggal yang dipilih. | Must |
 | FR-6 | Pegawai hanya bisa melihat data (read-only), tanpa akses ubah. | Must |
@@ -92,7 +92,7 @@ Nilai di bawah adalah usulan awal dan perlu dikonfirmasi.
 - **Asumsi:**
   - Driver memiliki akun Telegram dan bersedia menggunakannya.
   - Admin adalah satu atau beberapa orang yang sudah ditentukan.
-  - Satu driver hanya menjalankan satu booking pada satu waktu.
+  - Satu booking melibatkan satu pegawai dan satu driver. Satu driver hanya menjalankan satu booking pada satu waktu.
 - **Ketergantungan:**
   - Telegram Bot API untuk mengirim pesan ke driver.
   - Akun Google atau sistem login internal untuk autentikasi pegawai dan admin (belum ditentukan).
@@ -108,11 +108,17 @@ Nilai di bawah adalah usulan awal dan perlu dikonfirmasi.
 
 ## 10. Pertanyaan Terbuka
 
-- [ ] Berapa jumlah driver, pegawai, dan booking per bulan? — PIC: [nama]
-- [ ] Bagaimana login pegawai dan admin: akun Google, email/password, atau akun internal BPJS Kesh? — PIC: [nama]
-- [ ] Apakah satu booking bisa mencakup beberapa driver atau beberapa hari? — PIC: [nama]
+**Sudah diputuskan:**
+
+- [x] Satu booking melibatkan satu pegawai dan satu driver, dan dapat mencakup beberapa hari (FR-3).
+- [x] Siapa yang berhak menambah driver baru: admin saja, tanpa persetujuan tambahan (FR-2).
+- [x] Pegawai tetap chat admin untuk meminta booking. Melihat driver yang kosong tidak perlu chat admin (Skenario 3 dan 4, G1).
+
+**Belum diputuskan:**
+
+- [ ] Berapa jumlah driver, pegawai, dan booking per bulan? Belum diketahui, perlu dicari tahu. — PIC: [nama]
+- [ ] Metode login pegawai dan admin: akun Google, email/password, atau akun internal BPJS Kesh? Jawaban "ya" belum menjawab pertanyaan ini, perlu konfirmasi ulang. — PIC: [nama]
 - [ ] Apakah driver yang sedang cuti (FR-8) tetap muncul di daftar, atau disembunyikan? — PIC: [nama]
-- [ ] Siapa yang berhak menambah driver baru, dan apakah perlu persetujuan? — PIC: [nama]
 - [ ] Berapa lama riwayat booking disimpan? — PIC: [nama]
 - [ ] Siapa yang mengambil baseline chat ke admin untuk G1? — PIC: [nama]
 
