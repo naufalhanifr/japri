@@ -1,5 +1,7 @@
 # Analisis Bisnis: [Nama Fitur]
 
+> Acuan: `templates/prd.md`. ID G, FR, dan NFR di dokumen ini harus sama dengan PRD. Aturan bisnis (BR) dihubungkan ke FR di PRD.
+
 | | |
 |---|---|
 | **Analis** | [nama] |

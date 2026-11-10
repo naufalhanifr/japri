@@ -1,5 +1,7 @@
 # Debug Report: [Judul Singkat Error]
 
+> Acuan: `templates/prd.md`. Gejala dibandingkan dengan FR atau NFR yang terdampak di PRD, supaya jelas bagian mana dari perilaku yang diharapkan yang dilanggar.
+
 | | |
 |---|---|
 | **Pelapor** | [nama] |

@@ -1,5 +1,7 @@
 # Security Review: [Nama Fitur / Perubahan]
 
+> Acuan: `templates/prd.md`. Cakupan dan ancaman dihubungkan ke FR dan NFR keamanan di PRD. Risiko yang sudah tercatat di PRD dicek ulang di sini.
+
 | | |
 |---|---|
 | **Reviewer** | [nama] |

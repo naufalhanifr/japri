@@ -1,5 +1,7 @@
 # PRD: Website Monitoring & Penjadwalan Driver
 
+> Dokumen sumber. Template lain di folder ini mengacu ke file ini. Istilah peran, ID G, FR, dan NFR, serta skenario di dokumen turunan harus sama dengan yang ada di sini.
+
 | | |
 |---|---|
 | **Penulis** | Naufal Hanif R |

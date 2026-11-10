@@ -1,5 +1,7 @@
 # Panduan Commit Message
 
+> Acuan: `templates/prd.md`. Scope dan footer `Refs:` memakai ID FR dan NFR dari PRD.
+
 Template ini mengikuti format **Conventional Commits**.
 
 ## Format

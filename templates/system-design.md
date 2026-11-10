@@ -1,5 +1,7 @@
 # Desain Sistem: [Nama Fitur]
 
+> Acuan: `templates/prd.md`. Setiap elemen desain harus ditelusuri ke FR, NFR, atau G di PRD, dan peran serta skenario mengikuti PRD.
+
 | | |
 |---|---|
 | **Penulis** | [nama] |

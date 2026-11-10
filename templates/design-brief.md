@@ -1,5 +1,7 @@
 # Design Brief: [Nama Fitur / Halaman]
 
+> Acuan: `templates/prd.md`. Peran pengguna, skenario, dan kriteria keberhasilan harus sama dengan PRD. Rujuk ID G dan FR yang relevan.
+
 | | |
 |---|---|
 | **Pemohon** | [nama / tim] |
