@@ -12,7 +12,7 @@
 
 ## 1. Ringkasan
 
-Website untuk memantau ketersediaan dan jadwal driver secara terpusat. Pegawai dapat melihat driver mana yang sedang kosong dan ke mana setiap driver dibooking, tanpa harus chat admin dan tanpa perlu login. Booking tetap dilakukan melalui admin, yang login ke web admin untuk mengelola data driver (menambah, mengubah, dan menonaktifkan) dan booking. Riwayat perjalanan dan booking sebelumnya disimpan selamanya sebagai arsip kantor dan dapat dicari.
+Website untuk memantau ketersediaan dan jadwal driver secara terpusat. Pegawai dapat melihat driver mana yang sedang kosong dan ke mana setiap driver dibooking, tanpa harus chat admin dan tanpa perlu login. Booking tetap dilakukan melalui admin, yang login ke web admin untuk mengelola data driver (menambah, mengubah, dan menonaktifkan) dan booking, serta memantau driver yang belum terhubung ke Telegram dan pesan Telegram yang gagal. Driver menandai perjalanan selesai langsung dari pesan Telegram, dan admin tetap bisa mengubah status itu. Riwayat perjalanan dan booking sebelumnya disimpan selamanya sebagai arsip kantor dan dapat dicari.
 
 ## 2. Latar Belakang & Masalah
 
@@ -45,32 +45,32 @@ Hal yang sengaja **tidak** dikerjakan pada rilis ini.
 
 Peran pengguna:
 
-- **Admin:** login dengan email dan password di web admin. Menambah dan mengelola driver, membuat/mengubah/membatalkan booking, menandai booking selesai, dan melihat status pengiriman Telegram. Saat ini admin utama adalah Alvin.
-- **Pegawai:** tidak perlu login. Melihat dashboard dan riwayat secara read-only.
-- **Driver:** tidak punya akun dan tidak memakai website. Menerima pesan Telegram dari sistem.
+- **Admin:** login dengan email dan password di web admin. Menambah dan mengelola driver, membuat/mengubah/membatalkan booking, menandai booking selesai, melihat daftar driver yang belum terhubung ke Telegram, dan melihat daftar pesan Telegram yang gagal. Dua daftar terakhir hanya bisa dilihat admin. Saat ini admin utama adalah Alvin.
+- **Pegawai:** tidak perlu login. Membuka dashboard dan riwayat secara read-only.
+- **Driver:** tidak punya akun dan tidak memakai website. Menerima pesan Telegram dari sistem, dan dapat menekan tombol "Selesai" di pesan itu setelah selesai mengantar pegawai dan sampai di kantor.
 
 Skenario utama (alur langkah demi langkah):
 
 1. Admin menambahkan driver baru ke sistem (nama, nomor kontak, status aktif). Admin juga dapat mengubah data driver atau menonaktifkannya jika driver berhenti bertugas.
-2. Alvin (admin) menyetup koneksi Telegram untuk setiap driver satu kali, menggunakan kode salin yang disediakan sistem (FR-12). Setelah setup awal, pengiriman berjalan otomatis.
-3. Pegawai membuka website tanpa login dan melihat daftar driver beserta statusnya: driver mana yang sedang kosong, driver yang sedang cuti, dan untuk jam berapa driver lain sudah terbooking.
+2. Alvin (admin) menyetup koneksi Telegram untuk setiap driver satu kali, menggunakan kode salin yang disediakan sistem (FR-12). Setelah setup awal, pengiriman berjalan otomatis. Admin melihat di web admin driver mana yang belum terhubung dan menyelesaikan setup-nya (FR-16).
+3. Pegawai membuka dashboard tanpa login dan melihat daftar driver beserta statusnya: driver mana yang sedang kosong, driver yang sedang cuti, dan untuk jam berapa driver lain sudah terbooking.
 4. Saat menemukan driver yang kosong, pegawai menghubungi admin lewat chat untuk meminta booking. Pegawai tidak bisa membuat booking sendiri.
 5. Admin login ke web admin dan membuat booking baru dengan memilih driver, tanggal dan jam mulai/selesai, tujuan, serta nama pemesan. Sistem menolak jika jadwal driver bertabrakan (FR-4).
 6. Begitu booking disimpan, status driver berubah menjadi terbooking dan pegawai lain bisa melihat perubahannya.
-7. Pada saat yang sama, sistem mengirim pesan Telegram otomatis ke driver berisi detail booking.
+7. Pada saat yang sama, sistem mengirim pesan Telegram otomatis ke driver berisi detail booking. Jika pengiriman gagal, pesan itu masuk ke daftar pesan gagal yang hanya bisa dilihat admin (FR-14).
 8. Jika admin mengubah atau membatalkan booking, driver menerima pesan pembaruan di Telegram.
-9. Setelah perjalanan selesai, admin menandai booking sebagai selesai. Booking tersebut tersimpan selamanya di riwayat driver.
+9. Setelah selesai mengantar pegawai dan sampai di kantor, driver menekan tombol "Selesai" di pesan Telegram (FR-15). Admin tidak perlu mengubah status, tetapi tetap bisa menandai booking selesai di web admin. Driver kembali berstatus kosong, dan booking tersimpan selamanya di riwayat driver.
 
 ## 6. Persyaratan Fungsional
 
 | ID | Persyaratan | Prioritas (Must / Should / Could) |
 |----|-------------|----------------------------------|
-| FR-1 | Admin login dengan email dan password di web admin. Hanya admin yang bisa menambah, mengubah, atau membatalkan booking dan mengelola data driver. | Must |
+| FR-1 | Admin login dengan email dan password di web admin. Hanya admin yang bisa menambah, mengubah, membatalkan, atau menandai selesai booking secara manual dan mengelola data driver. Halaman admin, termasuk daftar driver belum terhubung Telegram dan daftar pesan gagal, tidak bisa dibuka tanpa login. | Must |
 | FR-2 | Admin dapat **menambah driver baru**, mengubah data driver, dan menonaktifkan driver. Driver yang nonaktif tidak muncul di daftar kosong dan tidak bisa dibooking. | Must |
 | FR-3 | Admin dapat membuat booking dengan satu pegawai dan satu driver, tanggal, jam mulai dan selesai, tujuan, dan nama pemesan. Satu booking dapat mencakup beberapa hari. | Must |
 | FR-4 | Sistem mencegah booking ganda: satu driver tidak bisa dibooking dua kali pada rentang waktu yang bertabrakan. | Must |
 | FR-5 | Dashboard menampilkan status setiap driver (kosong, terbooking, atau cuti) dan jadwalnya untuk hari ini dan rentang tanggal yang dipilih. | Must |
-| FR-6 | Pegawai tidak perlu login dan hanya bisa melihat data (read-only), tanpa akses ubah. | Must |
+| FR-6 | Dashboard dan riwayat dapat dibuka pegawai tanpa login. Pegawai hanya bisa melihat data (read-only), tanpa akses ubah. | Must |
 | FR-7 | Riwayat booking per driver, dengan filter tanggal dan status (selesai / dibatalkan). Riwayat disimpan selamanya sebagai arsip kantor. | Must |
 | FR-8 | Admin dapat memberi status cuti atau sakit pada driver. Driver dengan status ini tampil sebagai "Cuti", tidak muncul sebagai kosong, dan tidak bisa mendapat booking baru selama status aktif. | Should |
 | FR-9 | Filter driver kosong pada tanggal dan jam tertentu. | Should |
@@ -78,17 +78,19 @@ Skenario utama (alur langkah demi langkah):
 | FR-11 | Sistem mengirim pesan Telegram otomatis ke driver saat booking dibuat, berisi detail booking. | Must |
 | FR-12 | Admin (Alvin) menyetup koneksi Telegram untuk setiap driver satu kali menggunakan kode salin yang disediakan sistem. Setelah setup awal, pengiriman berjalan otomatis. Tanpa ini, pesan tidak bisa dikirim. | Must |
 | FR-13 | Sistem mengirim pesan pembaruan ke driver saat booking diubah atau dibatalkan. | Should |
-| FR-14 | Sistem mencatat status pengiriman setiap pesan (terkirim atau gagal), dan admin bisa melihat jika ada yang gagal. | Should |
+| FR-14 | Sistem mencatat status pengiriman setiap pesan (terkirim atau gagal), dan admin dapat melihat daftar pesan yang gagal di web admin. Daftar ini hanya bisa dilihat admin. | Should |
+| FR-15 | Driver dapat menekan tombol "Selesai" di pesan Telegram setelah selesai mengantar pegawai dan sampai di kantor. Booking menjadi selesai tanpa perlu admin mengubah status, dan driver kembali berstatus kosong. Admin tetap dapat menandai booking selesai secara manual (FR-1). Tombol hanya berlaku untuk driver yang ditugaskan pada booking itu, dan tidak berlaku lagi jika booking sudah selesai atau dibatalkan. | Should |
+| FR-16 | Admin dapat melihat daftar driver yang belum terhubung ke Telegram (belum menyelesaikan FR-12) di web admin, agar setup bisa diselesaikan sebelum driver dibooking. Daftar ini hanya bisa dilihat admin. | Should |
 
 ## 7. Persyaratan Non-Fungsional
 
 Nilai di bawah adalah usulan awal yang sudah disetujui pemilik produk, kecuali ditandai lain.
 
 - **NFR-1 Performa:** Dashboard memuat dalam 2 detik untuk jumlah driver dan booking yang ada. Pengiriman pesan Telegram dimulai dalam 1 menit setelah booking disimpan.
-- **NFR-2 Keamanan:** Pembatasan peran dilakukan di server, bukan hanya di tampilan. Token bot Telegram disimpan sebagai rahasia dan tidak ditampilkan di website. Nomor kontak driver tidak boleh ditampilkan atau disebarkan ke pegawai. Lihat `templates/security.md`.
+- **NFR-2 Keamanan:** Pembatasan peran dilakukan di server, bukan hanya di tampilan. Token bot Telegram disimpan sebagai rahasia dan tidak ditampilkan di website. Nomor kontak driver tidak boleh ditampilkan atau disebarkan ke pegawai. Tombol "Selesai" di Telegram hanya diterima dari chat Telegram driver yang ditugaskan pada booking itu. Daftar driver belum terhubung dan daftar pesan gagal hanya terlihat oleh admin. Lihat `templates/security.md`.
 - **NFR-3 Aksesibilitas:** WCAG 2.1 AA.
 - **NFR-4 Ketersediaan / skala:** Ketersediaan 99% pada jam kerja. Jumlah driver dan booking per bulan belum diketahui, lihat Pertanyaan Terbuka.
-- **NFR-5 Audit:** Setiap perubahan booking dan data driver tercatat dengan waktu dan pelaku, untuk mendukung G2.
+- **NFR-5 Audit:** Setiap perubahan booking dan data driver tercatat dengan waktu dan pelaku (admin atau driver, termasuk penandaan selesai lewat Telegram), untuk mendukung G2.
 
 ## 8. Asumsi & Ketergantungan
 
@@ -104,7 +106,8 @@ Nilai di bawah adalah usulan awal yang sudah disetujui pemilik produk, kecuali d
 
 | Risiko | Dampak | Kemungkinan | Mitigasi |
 |--------|--------|-------------|----------|
-| Driver belum terhubung ke Telegram, sehingga pesan gagal terkirim | Tinggi | Sedang | Wajibkan langkah FR-12 sebelum driver dibooking, dan tampilkan peringatan di daftar driver |
+| Driver belum terhubung ke Telegram, sehingga pesan gagal terkirim | Tinggi | Sedang | Wajibkan langkah FR-12 sebelum driver dibooking, dan tampilkan peringatan di daftar driver belum terhubung yang hanya terlihat admin (FR-16) |
+| Driver lupa menekan "Selesai", sehingga status tetap terbooking | Sedang | Sedang | Admin dapat menandai booking selesai secara manual (FR-1, FR-15) |
 | Pegawai tetap chat admin karena belum terbiasa dengan website | Sedang | Sedang | Sosialisasi singkat dan ukur G1 secara rutin |
 | Data pribadi driver (nomor kontak) bocor | Tinggi | Rendah | Batasi akses data driver ke admin dan terapkan kontrol akses di server |
 | Booking bentrok karena dua admin membuat booking bersamaan | Sedang | Rendah | Validasi bentrok di server dengan transaksi atau kunci database (FR-4) |
@@ -116,7 +119,9 @@ Nilai di bawah adalah usulan awal yang sudah disetujui pemilik produk, kecuali d
 - [x] Satu booking melibatkan satu pegawai dan satu driver, dan dapat mencakup beberapa hari (FR-3).
 - [x] Hanya admin yang berhak menambah driver baru, tanpa persetujuan tambahan (FR-2).
 - [x] Pegawai tetap chat admin untuk meminta booking. Melihat driver yang kosong tidak perlu chat admin (Skenario 3 dan 4, G1).
-- [x] Pegawai tidak perlu login. Hanya admin yang login dengan email dan password (FR-1, FR-6).
+- [x] Pegawai tidak perlu login. Dashboard dan riwayat dapat dibuka tanpa login. Hanya admin yang login dengan email dan password (FR-1, FR-6).
+- [x] Pengecekan driver yang belum terhubung ke Telegram dan daftar pesan Telegram yang gagal hanya ada di halaman admin (FR-14, FR-16).
+- [x] Driver dapat menekan "Selesai" di Telegram setelah mengantar pegawai dan sampai di kantor. Admin tetap bisa menandai selesai secara manual (FR-15).
 - [x] Driver yang sedang cuti tampil sebagai "Cuti" dan tidak bisa dibooking (FR-8).
 - [x] Riwayat booking disimpan selamanya sebagai arsip kantor (FR-7).
 - [x] Admin (Alvin) menyetup Telegram untuk setiap driver satu kali dengan kode salin, lalu pengiriman otomatis (FR-12).
@@ -132,13 +137,13 @@ Nilai di bawah adalah usulan awal yang sudah disetujui pemilik produk, kecuali d
 
 | Fase | Cakupan |
 |------|---------|
-| MVP | FR-1 s.d. FR-7, FR-11, FR-12 |
-| Iterasi 2 | FR-8, FR-9, FR-13, FR-14 |
+| MVP | FR-1 s.d. FR-7, FR-11, FR-12, FR-15 |
+| Iterasi 2 | FR-8, FR-9, FR-13, FR-14, FR-16 |
 | Iterasi 3 | FR-10 |
 
 ## 12. Kriteria Penerimaan
 
-- [ ] Pegawai bisa melihat status setiap driver tanpa login, tetapi tidak bisa mengubah apa pun (FR-5, FR-6).
+- [ ] Pegawai bisa membuka dashboard dan riwayat tanpa login, tetapi tidak bisa mengubah apa pun. Halaman admin tidak bisa dibuka tanpa login (FR-1, FR-5, FR-6).
 - [ ] Admin login dengan email dan password, lalu dapat menambah driver baru, mengubah datanya, dan menonaktifkannya (FR-1, FR-2).
 - [ ] Admin dapat membuat booking. Booking yang bertabrakan dengan jadwal driver yang sama ditolak (FR-3, FR-4).
 - [ ] Driver dengan status cuti tampil sebagai "Cuti" dan tidak bisa dibooking (FR-8).
@@ -146,4 +151,7 @@ Nilai di bawah adalah usulan awal yang sudah disetujui pemilik produk, kecuali d
 - [ ] Setelah booking diubah atau dibatalkan, driver menerima pesan pembaruan (FR-13).
 - [ ] Booking yang sudah selesai muncul di riwayat driver, dapat difilter berdasarkan tanggal serta status, dan tersimpan selamanya (FR-7).
 - [ ] Riwayat satu driver dapat ditemukan dalam waktu di bawah 30 detik (G3).
-- [ ] Pesan yang gagal terkirim tercatat dan terlihat oleh admin (FR-14).
+- [ ] Pesan yang gagal terkirim tercatat dan terlihat oleh admin saja (FR-14).
+- [ ] Driver yang belum terhubung ke Telegram muncul di daftar yang hanya terlihat admin (FR-16).
+- [ ] Setelah driver menekan "Selesai" di Telegram, booking berubah menjadi selesai, driver kembali kosong, dan booking masuk riwayat tanpa tindakan admin. Admin juga bisa menandai selesai secara manual (FR-1, FR-15).
+- [ ] Tombol "Selesai" tidak berlaku untuk driver lain, atau untuk booking yang sudah selesai atau dibatalkan (FR-15, NFR-2).
