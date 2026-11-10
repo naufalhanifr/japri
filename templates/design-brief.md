@@ -20,7 +20,7 @@ Contoh (Monitoring Driver): pegawai bisa langsung melihat driver mana yang koson
 
 - **Latar belakang:** [kenapa desain ini dibutuhkan, rujuk ID G dari PRD, mis. G1 dan G3]
 - **Pengguna utama:** [peran dari PRD, kebutuhan, dan konteks pemakaian (mobile / desktop, situasi)]
-  - Contoh: **Pegawai** BPJS Kesh (tanpa login, hanya melihat, read-only), **Admin** (login dengan email dan password, mengelola driver dan booking), **Driver** (tanpa akun, tidak memakai website, menerima pesan Telegram).
+  - Contoh: **Pegawai** BPJS Kesh (tanpa login, membuka dashboard dan riwayat, read-only), **Admin** (login dengan email dan password, mengelola driver dan booking, memantau pesan gagal dan driver belum terhubung Telegram), **Driver** (tanpa akun, tidak memakai website, menerima pesan Telegram dan menekan "Selesai" di sana).
 - **Posisi dalam produk:** [halaman / alur mana, sebelum dan sesudah apa]
 
 ## 3. Masalah yang Harus Diselesaikan
@@ -49,7 +49,7 @@ Tulis atau tempel diagram alur:
 3. [langkah]
 
 Kondisi khusus (error, kosong, loading, offline): [jelaskan]
-- Contoh: driver nonaktif tidak muncul di daftar kosong (FR-2); booking yang bentrok ditolak dengan alasan yang jelas (FR-4); driver yang belum terhubung Telegram ditandai peringatan (FR-12).
+- Contoh: driver nonaktif tidak muncul di daftar kosong (FR-2); booking yang bentrok ditolak dengan alasan yang jelas (FR-4); driver yang belum terhubung Telegram ditandai peringatan hanya di halaman admin (FR-16); admin bisa menandai booking selesai manual jika driver belum menekan "Selesai" (FR-15).
 
 ## 6. Kebutuhan Konten
 
@@ -58,7 +58,9 @@ Kondisi khusus (error, kosong, loading, offline): [jelaskan]
 | Judul | [sumber] | [mis. 40 karakter] |
 | Status driver | Kosong / Terbooking / Cuti (FR-5, FR-8) | [...] |
 | Pesan error bentrok | FR-4 | — |
-| Status pengiriman Telegram | Terkirim / Gagal (FR-14) | [...] |
+| Status pengiriman Telegram (hanya admin) | Terkirim / Gagal (FR-14) | [...] |
+| Daftar driver belum terhubung Telegram (hanya admin) | FR-16 | [...] |
+| Tombol tandai selesai manual (admin) | FR-1, FR-15 | [...] |
 
 ## 7. Panduan Visual
 
@@ -79,7 +81,7 @@ Kondisi khusus (error, kosong, loading, offline): [jelaskan]
 
 ## 9. Aksesibilitas
 
-Mengacu pada NFR aksesibilitas di PRD (WCAG 2.1 AA).
+Mengacu pada NFR-3 di PRD (WCAG 2.1 AA).
 
 - [ ] Kontras teks minimal 4.5:1 (WCAG AA)
 - [ ] Target sentuh minimal 44×44 px
@@ -106,7 +108,7 @@ Sesuaikan dengan G di PRD.
 - [ ] [kriteria yang dapat diuji, mis. pegawai menemukan driver kosong tanpa chat admin (G1)]
 - [ ] [mis. riwayat satu driver ditemukan dalam waktu di bawah 30 detik (G3)]
 - [ ] [mis. booking hanya bisa dibuat dari akun admin, tanpa tombol booking untuk pegawai (G2, FR-6)]
-- [ ] [mis. status pengiriman Telegram terlihat admin, dan pesan yang gagal ditandai (G4, FR-14)]
+- [ ] [mis. status pengiriman Telegram dan daftar driver belum terhubung hanya terlihat admin, dan pesan yang gagal ditandai (G4, FR-14, FR-16)]
 
 ## 13. Jadwal Review
 

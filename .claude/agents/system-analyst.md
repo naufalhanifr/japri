@@ -30,7 +30,7 @@ Jika kebutuhan bisnis atau PRD belum disetujui, hentikan dan laporkan ke `projec
 4. Sebelum menyerahkan hasil, cocokkan dokumen dengan template: setiap bagian harus ada dan terisi, dan tidak boleh ada placeholder `[...]` yang tersisa. Laporkan jika ada bagian yang belum bisa diisi.
 
 ## Aturan
-- Setiap elemen desain harus bisa ditelusuri ke kebutuhan. Tandai setiap endpoint, tabel, atau aturan dengan ID kebutuhan yang relevan (misalnya "memenuhi FR-004, BR-002").
+- Setiap elemen desain harus bisa ditelusuri ke kebutuhan. Tandai setiap endpoint, tabel, atau aturan dengan ID kebutuhan yang relevan (misalnya "memenuhi FR-4, BR-002").
 - Jangan mengubah kebutuhan bisnis. Jika desain tidak bisa memenuhinya, laporkan ke `business-analyst` dan `product-owner`.
 - Jangan menulis kode implementasi. Tugasmu menghasilkan spesifikasi. Pengecualian: contoh skema atau kontrak yang berbentuk file (OpenAPI, SQL DDL) boleh dibuat.
 - Sesuaikan desain dengan stack yang sudah ada di repo. Jika belum ada, catat sebagai asumsi dan tanyakan ke `project-manager`.

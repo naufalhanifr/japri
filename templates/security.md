@@ -1,6 +1,6 @@
 # Security Review: [Nama Fitur / Perubahan]
 
-> Acuan: `templates/prd.md`. Cakupan dan ancaman dihubungkan ke FR dan NFR keamanan di PRD. Risiko yang sudah tercatat di PRD dicek ulang di sini.
+> Acuan: `templates/prd.md`. Cakupan dan ancaman dihubungkan ke FR dan NFR-2 (keamanan) di PRD. Risiko yang sudah tercatat di PRD dicek ulang di sini.
 
 | | |
 |---|---|
@@ -16,20 +16,20 @@ Satu paragraf: apa yang berubah, data apa yang tersentuh, dan kesimpulan singkat
 ## 2. Cakupan
 
 - **Komponen:** [service, endpoint, halaman, job]
-  - Contoh: login dua peran (FR-1), endpoint tambah dan ubah driver (FR-2), endpoint booking (FR-3, FR-4), integrasi pengiriman pesan Telegram (FR-11 sampai FR-14)
+  - Contoh: login dua peran (FR-1), endpoint tambah dan ubah driver (FR-2), endpoint booking (FR-3, FR-4), integrasi pengiriman pesan Telegram dan callback tombol "Selesai" dari driver (FR-11 sampai FR-16)
 - **Data yang diproses:** [data pribadi, kredensial, token, data keuangan, dll.]
   - Contoh: nomor kontak driver, akun Telegram driver, token Bot Telegram, data pemesan
 - **Pihak eksternal yang terlibat:** [API, layanan pihak ketiga]
-  - Contoh: Telegram Bot API. Login admin memakai email dan password (FR-1); tidak ada login pihak ketiga untuk pegawai atau driver
+  - Contoh: Telegram Bot API (kirim pesan dan terima callback tombol "Selesai"). Login admin memakai email dan password (FR-1); tidak ada login pihak ketiga untuk pegawai atau driver
 
 ## 3. Model Ancaman (STRIDE)
 
 | Kategori | Ancaman | Ada di fitur ini? | Mitigasi |
 |----------|---------|-------------------|----------|
-| **S**poofing | Peniruan identitas pegawai atau admin; pesan palsu ke driver | Ya / Tidak | [mis. login per peran, akun Telegram driver dihubungkan sekali (FR-12)] |
-| **T**ampering | Perubahan booking atau data driver oleh pihak tanpa hak | Ya / Tidak | [mis. hanya admin yang bisa mengubah, dicek di server (FR-1)] |
-| **R**epudiation | Admin menyangkal membuat atau membatalkan booking | Ya / Tidak | [mis. audit log waktu dan pelaku (NFR audit)] |
-| **I**nformation disclosure | Nomor kontak driver atau token Telegram bocor | Ya / Tidak | [mis. akses data driver hanya admin; token tidak ditampilkan di website] |
+| **S**poofing | Peniruan identitas pegawai atau admin; pesan palsu ke driver; tombol "Selesai" ditekan dari akun Telegram yang bukan driver penugasan | Ya / Tidak | [mis. login per peran, akun Telegram driver dihubungkan sekali (FR-12); callback "Selesai" hanya diterima dari chat driver yang ditugaskan (FR-15, NFR-2)] |
+| **T**ampering | Perubahan booking (termasuk status selesai) atau data driver oleh pihak tanpa hak | Ya / Tidak | [mis. hanya admin yang bisa mengubah, dan hanya admin atau driver penugasan yang bisa menyelesaikan booking, dicek di server (FR-1, FR-15)] |
+| **R**epudiation | Admin menyangkal membuat atau membatalkan booking, atau driver menyangkal menekan "Selesai" | Ya / Tidak | [mis. audit log waktu dan pelaku, admin atau driver (NFR-5)] |
+| **I**nformation disclosure | Nomor kontak driver atau token Telegram bocor | Ya / Tidak | [mis. akses data driver hanya admin; daftar pesan gagal dan driver belum terhubung hanya admin (FR-14, FR-16); token tidak ditampilkan di website] |
 | **D**enial of service | Pembebanan berlebih pada dashboard atau login | Ya / Tidak | [mis. rate limit pada login] |
 | **E**levation of privilege | Pegawai (read-only) bisa membuat atau mengubah booking | Ya / Tidak | [mis. pembatasan peran di server, bukan hanya di tampilan (FR-6)] |
 
@@ -40,6 +40,8 @@ Satu paragraf: apa yang berubah, data apa yang tersentuh, dan kesimpulan singkat
 - [ ] Pembatasan peran (admin / pegawai) dilakukan di server, bukan hanya di tampilan (FR-1, FR-6)
 - [ ] Tidak ada akses objek tanpa pengecekan kepemilikan (cegah IDOR), mis. pegawai tidak bisa membuka data driver lewat ID langsung
 - [ ] Sesi dan token memiliki masa berlaku dan dapat dicabut
+- [ ] Halaman admin (termasuk daftar pesan gagal dan driver belum terhubung) menolak akses tanpa login (FR-1, FR-14, FR-16)
+- [ ] Callback tombol "Selesai" dari Telegram diverifikasi: berasal dari chat driver yang ditugaskan pada booking itu, dan booking belum selesai atau dibatalkan (FR-15, NFR-2)
 
 ### Input & Output
 - [ ] Semua input divalidasi (tipe, panjang, format, rentang), mis. tanggal dan jam mulai lebih kecil dari jam selesai

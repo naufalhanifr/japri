@@ -1,6 +1,6 @@
 # Panduan Commit Message
 
-> Acuan: `templates/prd.md`. Scope dan footer `Refs:` memakai ID FR dari PRD. NFR di PRD belum punya ID, jadi tulis nama NFR-nya (mis. "NFR keamanan").
+> Acuan: `templates/prd.md`. Scope dan footer `Refs:` memakai ID FR dari PRD. NFR di PRD memakai ID NFR-1 s.d. NFR-5, jadi tulis ID-nya (mis. "NFR-2").
 
 Template ini mengikuti format **Conventional Commits**.
 
@@ -45,10 +45,10 @@ Nama modul atau area yang terdampak. Untuk proyek ini, gunakan nama dari PRD:
 
 - `auth`: login admin dan pembatasan akses pegawai yang tanpa login (FR-1, FR-6)
 - `driver`: data driver, status aktif, dan status cuti (FR-2, FR-8)
-- `booking`: pembuatan, perubahan, dan pembatalan booking (FR-3, FR-4)
+- `booking`: pembuatan, perubahan, pembatalan, dan penandaan selesai manual oleh admin (FR-3, FR-4, FR-15)
 - `dashboard`: status driver dan jadwal, termasuk filter driver kosong (FR-5, FR-9)
 - `riwayat`: riwayat booking, filter, dan ekspor (FR-7, FR-10)
-- `telegram`: pengiriman pesan Telegram dan setup koneksi Telegram driver (FR-11 sampai FR-14)
+- `telegram`: pengiriman pesan Telegram, setup koneksi driver, tombol "Selesai" dari driver, daftar pesan gagal, dan daftar driver belum terhubung (FR-11 sampai FR-16)
 
 ## Contoh
 
@@ -78,7 +78,7 @@ security(telegram): sembunyikan token Bot Telegram dari respons API
 
 Token sebelumnya ikut terkirim di konfigurasi yang dibaca dashboard.
 Sekarang token hanya dibaca di server dan tidak pernah ditampilkan
-di website (NFR keamanan).
+di website (NFR-2).
 ```
 
 ## Breaking Change
