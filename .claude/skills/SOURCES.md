@@ -21,7 +21,6 @@ Skill di folder ini disalin dari repo publik berikut. Untuk memperbarui, salin u
 
 - **caveman-stats** butuh hook dari plugin caveman (`src/hooks/caveman-mode-tracker.js`), yang tidak ikut disalin. Tanpa hook itu `/caveman-stats` tidak akan menampilkan angka.
 - **caveman-setup** mengarahkan panggilan LLM aplikasi lewat gateway pihak ketiga (Caveman Cloud) dan butuh `CAVE_API_KEY`. Jalankan hanya kalau memang diminta.
-
 - **graphify** butuh CLI `graphify` dari paket PyPI `graphifyy` (pakai dua huruf y): `uv tool install graphifyy` atau `pipx install graphifyy`.
 - **ui-ux-pro-max** dan skill desain lain menjalankan skrip Python 3 dan Node yang ada di folder `scripts/` masing-masing.
 - **design** (generator logo) baru bisa membuat gambar kalau `GEMINI_API_KEY` atau key penyedia lain sudah diset. Jangan commit key ke repo.
