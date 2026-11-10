@@ -2,97 +2,83 @@
 
 | | |
 |---|---|
-| **Pemohon** | [nama / tim] |
-| **Designer** | [nama] |
-| **Status** | Draft / Review / Final |
-| **Target rilis** | YYYY-MM-DD |
-| **Link PRD** | [link] |
+| **Penulis** | [nama] |
+| **Status** | Draft / Review / Disetujui |
+| **Terakhir diubah** | YYYY-MM-DD |
+| **Terkait** | [link issue, design, dokumen lain] |
 
-## 1. Tujuan Desain
+## 1. Ringkasan
 
-Satu kalimat: pengalaman apa yang ingin dicapai pengguna setelah desain ini jadi.
+Satu sampai tiga kalimat: apa yang dibangun dan untuk siapa.
 
-## 2. Konteks
+## 2. Latar Belakang & Masalah
 
-- **Latar belakang:** [kenapa desain ini dibutuhkan]
-- **Pengguna utama:** [persona, kebutuhan, konteks pemakaian (mobile / desktop, situasi)]
-- **Posisi dalam produk:** [halaman / alur mana, sebelum dan sesudah apa]
+- **Masalah:** apa yang sekarang tidak berjalan atau belum ada?
+- **Siapa yang terdampak:** [persona / peran pengguna]
+- **Bukti:** data, feedback pengguna, atau temuan yang mendukung masalah ini.
 
-## 3. Masalah yang Harus Diselesaikan
+## 3. Tujuan
 
-- [masalah pengguna 1]
-- [masalah pengguna 2]
+Tujuan harus bisa diukur.
 
-## 4. Cakupan
+| # | Tujuan | Metrik | Target |
+|---|--------|--------|--------|
+| G1 | [tujuan] | [metrik] | [angka] |
 
-**Termasuk:**
-- [layar / komponen / alur]
+## 4. Non-Tujuan
 
-**Tidak termasuk:**
-- [layar / komponen / alur]
+Hal yang sengaja **tidak** dikerjakan pada rilis ini.
 
-## 5. Alur Pengguna
+- [non-tujuan]
 
-Tulis atau tempel diagram alur:
+## 5. Pengguna & Skenario
+
+Tulis dalam format user story:
+
+- Sebagai **[peran]**, saya ingin **[aksi]** agar **[manfaat]**.
+
+Skenario utama (alur langkah demi langkah):
 
 1. [langkah]
 2. [langkah]
-3. [langkah]
 
-Kondisi khusus (error, kosong, loading, offline): [jelaskan]
+## 6. Persyaratan Fungsional
 
-## 6. Kebutuhan Konten
+| ID | Persyaratan | Prioritas (Must / Should / Could) |
+|----|-------------|----------------------------------|
+| FR-1 | [deskripsi] | Must |
+| FR-2 | [deskripsi] | Should |
 
-| Elemen | Sumber teks / data | Batas panjang |
-|--------|--------------------|---------------|
-| Judul | [sumber] | [mis. 40 karakter] |
-| Pesan error | [sumber] | — |
+## 7. Persyaratan Non-Fungsional
 
-## 7. Panduan Visual
+- **Performa:** [mis. respons API < 300 ms p95]
+- **Keamanan:** [lihat template security]
+- **Aksesibilitas:** [mis. WCAG 2.1 AA]
+- **Ketersediaan / skala:** [target]
 
-- **Design system / komponen yang dipakai:** [link atau nama]
-- **Warna:** [token warna, mode terang dan gelap]
-- **Tipografi:** [token atau ukuran]
-- **Ikon & ilustrasi:** [gaya dan sumber]
-- **Referensi visual:** [link, screenshot, kompetitor]
-- **Hal yang harus dihindari:** [...]
+## 8. Asumsi & Ketergantungan
 
-## 8. Breakpoint & Responsivitas
+- **Asumsi:** [...]
+- **Ketergantungan:** [tim, layanan eksternal, API]
 
-| Breakpoint | Lebar | Catatan |
-|------------|-------|---------|
-| Mobile | < 640 px | [...] |
-| Tablet | 640–1024 px | [...] |
-| Desktop | > 1024 px | [...] |
+## 9. Risiko
 
-## 9. Aksesibilitas
+| Risiko | Dampak | Kemungkinan | Mitigasi |
+|--------|--------|-------------|----------|
+| [risiko] | Tinggi / Sedang / Rendah | Tinggi / Sedang / Rendah | [mitigasi] |
 
-- [ ] Kontras teks minimal 4.5:1 (WCAG AA)
-- [ ] Target sentuh minimal 44×44 px
-- [ ] Navigasi keyboard dan urutan fokus jelas
-- [ ] Label dan teks alternatif untuk ikon dan gambar
-- [ ] Status tidak hanya dikomunikasikan lewat warna
+## 10. Pertanyaan Terbuka
 
-## 10. Interaksi & Animasi
+- [ ] [pertanyaan] — PIC: [nama]
 
-- [interaksi, durasi, dan kondisi, mis. tombol berubah saat loading]
+## 11. Rencana Rilis
 
-## 11. Deliverable
+| Fase | Cakupan | Target tanggal |
+|------|---------|----------------|
+| MVP | FR-1, FR-2 | YYYY-MM-DD |
+| Iterasi 2 | FR-3+ | YYYY-MM-DD |
 
-- [ ] Wireframe
-- [ ] High-fidelity mockup (light & dark)
-- [ ] Prototipe interaktif
-- [ ] Spesifikasi spacing, state, dan token
-- [ ] Aset ekspor
+## 12. Kriteria Penerimaan
 
-## 12. Kriteria Keberhasilan
-
-- [ ] [kriteria yang dapat diuji, mis. tugas X selesai dalam < 3 klik]
-- [ ] [kriteria]
-
-## 13. Jadwal Review
-
-| Milestone | Tanggal | Reviewer |
-|-----------|---------|----------|
-| Konsep awal | YYYY-MM-DD | [nama] |
-| Final | YYYY-MM-DD | [nama] |
+- [ ] [kriteria yang dapat diuji]
+- [ ] [kriteria yang dapat diuji]
