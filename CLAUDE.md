@@ -18,3 +18,12 @@ Setiap session yang mengubah file di repo ini wajib menyelesaikan pekerjaannya d
 
 - `templates/prd.md` adalah dokumen sumber. Istilah peran, ID G, FR, dan NFR di dokumen lain harus sama dengan PRD.
 - `templates/commit.md` adalah panduan format commit.
+
+## Skill wajib
+
+Skill berikut ada di `.claude/skills/`. Muat skill yang sesuai dengan memanggilnya lewat tool Skill sebelum mulai bekerja, jangan menunggu pemilihan otomatis. Kalau pengguna meminta lain di session itu, ikuti permintaan pengguna.
+
+- **Menulis atau mengubah kode:** `karpathy-guidelines` dan `ponytail`.
+- **Membuat atau mengubah UI:** `antislop`, `antislop-ui`, dan `ui-ux-pro-max`. Tambahkan `shadcn` jika proyek memakai shadcn/ui (ada `components.json`).
+  - `antislop` selalu memakai mode **during** di repo ini, sumbernya aturan di CLAUDE.md ini. Jangan tanya mode lagi.
+- **Me-review perubahan atau PR:** `ponytail-review`.
