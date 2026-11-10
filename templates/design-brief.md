@@ -2,83 +2,110 @@
 
 | | |
 |---|---|
-| **Penulis** | [nama] |
-| **Status** | Draft / Review / Disetujui |
-| **Terakhir diubah** | YYYY-MM-DD |
-| **Terkait** | [link issue, design, dokumen lain] |
+| **Pemohon** | [nama / tim] |
+| **Designer** | [nama] |
+| **Status** | Draft / Review / Final |
+| **Target rilis** | YYYY-MM-DD |
+| **Link PRD** | [link ke `docs/prd/<fitur>.md`] |
 
-## 1. Ringkasan
+## 1. Tujuan Desain
 
-Satu sampai tiga kalimat: apa yang dibangun dan untuk siapa.
+Satu kalimat: pengalaman apa yang ingin dicapai pengguna setelah desain ini jadi.
 
-## 2. Latar Belakang & Masalah
+Contoh (Monitoring Driver): pegawai bisa langsung melihat driver mana yang kosong tanpa harus bertanya ke admin.
 
-- **Masalah:** apa yang sekarang tidak berjalan atau belum ada?
-- **Siapa yang terdampak:** [persona / peran pengguna]
-- **Bukti:** data, feedback pengguna, atau temuan yang mendukung masalah ini.
+## 2. Konteks
 
-## 3. Tujuan
+- **Latar belakang:** [kenapa desain ini dibutuhkan, rujuk G-x dari PRD]
+- **Pengguna utama:** [peran dari PRD, kebutuhan, dan konteks pemakaian (mobile / desktop, situasi)]
+  - Contoh: **Pegawai** BPJS Kesh (hanya melihat, read-only), **Admin** (mengelola driver dan booking). **Driver** tidak memakai website.
+- **Posisi dalam produk:** [halaman / alur mana, sebelum dan sesudah apa]
 
-Tujuan harus bisa diukur.
+## 3. Masalah yang Harus Diselesaikan
 
-| # | Tujuan | Metrik | Target |
-|---|--------|--------|--------|
-| G1 | [tujuan] | [metrik] | [angka] |
+Tulis per peran dan tautkan ke skenario di PRD.
 
-## 4. Non-Tujuan
+- [masalah pengguna 1, mis. pegawai tidak tahu driver mana yang kosong tanpa chat admin (Skenario 3)]
+- [masalah pengguna 2, mis. admin perlu tahu jadwal bentrok sebelum menyimpan booking (FR-4)]
 
-Hal yang sengaja **tidak** dikerjakan pada rilis ini.
+## 4. Cakupan
 
-- [non-tujuan]
+**Termasuk:**
+- [layar / komponen / alur, dengan FR terkait]
+  - Contoh: Dashboard status driver (FR-5), form booking admin (FR-3), riwayat per driver (FR-7)
 
-## 5. Pengguna & Skenario
+**Tidak termasuk:**
+- [layar / komponen / alur]
+  - Contoh: Form booking untuk pegawai (Non-Tujuan 1), aplikasi driver (Non-Tujuan 3)
 
-Tulis dalam format user story:
+## 5. Alur Pengguna
 
-- Sebagai **[peran]**, saya ingin **[aksi]** agar **[manfaat]**.
-
-Skenario utama (alur langkah demi langkah):
+Tulis atau tempel diagram alur:
 
 1. [langkah]
 2. [langkah]
+3. [langkah]
 
-## 6. Persyaratan Fungsional
+Kondisi khusus (error, kosong, loading, offline): [jelaskan]
+- Contoh: driver nonaktif tidak muncul di daftar kosong; booking yang bentrok ditolak dengan alasan yang jelas.
 
-| ID | Persyaratan | Prioritas (Must / Should / Could) |
-|----|-------------|----------------------------------|
-| FR-1 | [deskripsi] | Must |
-| FR-2 | [deskripsi] | Should |
+## 6. Kebutuhan Konten
 
-## 7. Persyaratan Non-Fungsional
+| Elemen | Sumber teks / data | Batas panjang |
+|--------|--------------------|---------------|
+| Judul | [sumber] | [mis. 40 karakter] |
+| Status driver | Kosong / Terbooking / Tidak tersedia (FR-5, FR-8) | [...] |
+| Pesan error bentrok | FR-4 | — |
 
-- **Performa:** [mis. respons API < 300 ms p95]
-- **Keamanan:** [lihat template security]
-- **Aksesibilitas:** [mis. WCAG 2.1 AA]
-- **Ketersediaan / skala:** [target]
+## 7. Panduan Visual
 
-## 8. Asumsi & Ketergantungan
+- **Design system / komponen yang dipakai:** [link atau nama]
+- **Warna:** [token warna, mode terang dan gelap]. Status driver tidak boleh hanya dibedakan dengan warna.
+- **Tipografi:** [token atau ukuran]
+- **Ikon & ilustrasi:** [gaya dan sumber]
+- **Referensi visual:** [link, screenshot, kompetitor]
+- **Hal yang harus dihindari:** [...]
 
-- **Asumsi:** [...]
-- **Ketergantungan:** [tim, layanan eksternal, API]
+## 8. Breakpoint & Responsivitas
 
-## 9. Risiko
+| Breakpoint | Lebar | Catatan |
+|------------|-------|---------|
+| Mobile | < 640 px | [mis. daftar driver ditampilkan sebagai kartu] |
+| Tablet | 640–1024 px | [...] |
+| Desktop | > 1024 px | [mis. daftar driver ditampilkan sebagai tabel dengan jadwal] |
 
-| Risiko | Dampak | Kemungkinan | Mitigasi |
-|--------|--------|-------------|----------|
-| [risiko] | Tinggi / Sedang / Rendah | Tinggi / Sedang / Rendah | [mitigasi] |
+## 9. Aksesibilitas
 
-## 10. Pertanyaan Terbuka
+Mengacu pada NFR aksesibilitas di PRD (WCAG 2.1 AA).
 
-- [ ] [pertanyaan] — PIC: [nama]
+- [ ] Kontras teks minimal 4.5:1 (WCAG AA)
+- [ ] Target sentuh minimal 44×44 px
+- [ ] Navigasi keyboard dan urutan fokus jelas
+- [ ] Label dan teks alternatif untuk ikon dan gambar
+- [ ] Status driver (kosong / terbooking) tidak hanya dikomunikasikan lewat warna
 
-## 11. Rencana Rilis
+## 10. Interaksi & Animasi
 
-| Fase | Cakupan | Target tanggal |
-|------|---------|----------------|
-| MVP | FR-1, FR-2 | YYYY-MM-DD |
-| Iterasi 2 | FR-3+ | YYYY-MM-DD |
+- [interaksi, durasi, dan kondisi, mis. tombol simpan booking berubah saat loading]
 
-## 12. Kriteria Penerimaan
+## 11. Deliverable
 
-- [ ] [kriteria yang dapat diuji]
-- [ ] [kriteria yang dapat diuji]
+- [ ] Wireframe
+- [ ] High-fidelity mockup (light & dark)
+- [ ] Prototipe interaktif
+- [ ] Spesifikasi spacing, state, dan token
+- [ ] Aset ekspor
+
+## 12. Kriteria Keberhasilan
+
+Sesuaikan dengan G di PRD.
+
+- [ ] [kriteria yang dapat diuji, mis. pegawai menemukan driver kosong tanpa chat admin (G1)]
+- [ ] [mis. riwayat satu driver ditemukan dalam waktu di bawah 30 detik (G3)]
+
+## 13. Jadwal Review
+
+| Milestone | Tanggal | Reviewer |
+|-----------|---------|----------|
+| Konsep awal | YYYY-MM-DD | [nama] |
+| Final | YYYY-MM-DD | [nama] |

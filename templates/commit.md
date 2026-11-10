@@ -39,33 +39,44 @@ Template ini mengikuti format **Conventional Commits**.
 
 ## Scope (opsional)
 
-Nama modul atau area yang terdampak, mis. `auth`, `api`, `ui`, `db`.
+Nama modul atau area yang terdampak. Untuk proyek ini, gunakan nama dari PRD:
+
+- `auth`: login dua peran (FR-1)
+- `driver`: data driver, status aktif, dan ketersediaan (FR-2, FR-8)
+- `booking`: pembuatan, perubahan, dan pembatalan booking (FR-3, FR-4)
+- `dashboard`: status driver dan jadwal (FR-5, FR-9)
+- `riwayat`: riwayat dan filter booking (FR-7, FR-10)
+- `telegram`: pengiriman pesan dan pairing akun Telegram driver (FR-11 sampai FR-14)
 
 ## Contoh
 
 ```
-feat(auth): tambah login dengan OTP via email
+feat(booking): tolak booking yang bentrok dengan jadwal driver
 
-Pengguna yang lupa password sebelumnya harus menghubungi admin.
-OTP memberi jalur mandiri dengan masa berlaku 5 menit dan batas
-3 kali percobaan.
+Admin sebelumnya bisa menyimpan dua booking untuk driver yang sama
+pada jam yang bertabrakan. Pengecekan sekarang dilakukan di server
+dalam transaksi database agar dua admin yang menyimpan bersamaan
+tidak lolos.
 
-Refs: #42
+Refs: FR-4
 ```
 
 ```
-fix(api): cegah duplikasi pesanan saat request diulang
+fix(telegram): kirim pesan pembaruan saat booking dibatalkan
 
-Klien mobile mengirim ulang request saat timeout. Sekarang request
-dengan Idempotency-Key yang sama mengembalikan hasil pertama.
+Driver tidak menerima pesan saat admin membatalkan booking karena
+pemicu hanya aktif untuk pembuatan. Sekarang pembatalan juga memicu
+pesan pembaruan (FR-13).
 
 Fixes: #118
 ```
 
 ```
-security(upload): validasi tipe file berdasarkan isi, bukan ekstensi
+security(auth): sembunyikan token Bot Telegram dari respons API
 
-Ekstensi bisa dipalsukan. Sekarang tipe MIME diperiksa dari magic bytes.
+Token sebelumnya ikut terkirim di konfigurasi yang dibaca dashboard.
+Sekarang token hanya dibaca di server dan tidak pernah ditampilkan
+di website (NFR keamanan).
 ```
 
 ## Breaking Change
@@ -73,16 +84,17 @@ Ekstensi bisa dipalsukan. Sekarang tipe MIME diperiksa dari magic bytes.
 Tambahkan `BREAKING CHANGE:` di footer, jelaskan apa yang berubah dan cara migrasinya.
 
 ```
-feat(api)!: ganti format respons paginasi
+feat(driver)!: ganti status driver nonaktif menjadi boolean terpisah
 
-BREAKING CHANGE: field `data` diganti `items`. Klien harus memperbarui
-parsing respons sebelum deploy.
+BREAKING CHANGE: field `status` diganti `aktif` (boolean). Klien harus
+memperbarui pembacaan status sebelum deploy.
 ```
 
 ## Checklist Sebelum Commit
 
 - [ ] Ringkasan sesuai format `type(scope): ...`
-- [ ] Tidak ada rahasia (API key, password, token) dalam perubahan
+- [ ] Scope memakai nama modul dari daftar di atas
+- [ ] Tidak ada rahasia (token Bot Telegram, API key, password) dalam perubahan
 - [ ] Tidak ada file yang tidak relevan ikut ter-stage
 - [ ] Tes lokal sudah dijalankan
-- [ ] Issue terkait disebut di footer (`Refs:`, `Fixes:`)
+- [ ] FR atau issue terkait disebut di footer (`Refs:`, `Fixes:`)

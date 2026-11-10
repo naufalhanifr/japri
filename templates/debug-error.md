@@ -17,6 +17,8 @@ Apa yang terjadi, dalam satu sampai tiga kalimat.
 - **Yang terjadi:** [...]
 - **Frekuensi:** selalu / kadang / sekali
 
+Contoh: Yang diharapkan: booking yang bentrok ditolak (FR-4). Yang terjadi: admin bisa menyimpan dua booking untuk driver yang sama pada jam yang bertabrakan.
+
 ## 2. Cara Mereproduksi
 
 1. [langkah]
@@ -29,18 +31,22 @@ Apa yang terjadi, dalam satu sampai tiga kalimat.
 [data atau kondisi]
 ```
 
+Contoh: Driver A sudah dibooking 09.00–12.00 pada tanggal X. Admin membuat booking baru untuk Driver A pada 10.00–11.00 tanggal X.
+
 ## 3. Pesan Error & Log
 
 ```
 [paste pesan error lengkap dan stack trace]
 ```
 
+Jangan menyalin nomor kontak driver atau token Bot Telegram ke laporan. Samarkan sebelum ditempel.
+
 ## 4. Lingkungan
 
 - **OS / browser / perangkat:** [...]
 - **Runtime & versi:** [mis. Node 20.11, Python 3.12]
-- **Dependensi relevan:** [nama dan versi]
-- **Konfigurasi / env var terkait:** [tanpa nilai rahasia]
+- **Dependensi relevan:** [nama dan versi, mis. Telegram Bot API]
+- **Konfigurasi / env var terkait:** [tanpa nilai rahasia, mis. variabel token bot]
 
 ## 5. Perubahan Terakhir
 
@@ -54,6 +60,8 @@ Apa yang terjadi, dalam satu sampai tiga kalimat.
 | # | Hipotesis | Cara verifikasi | Hasil |
 |---|-----------|-----------------|-------|
 | H1 | [penyebab yang mungkin] | [log, breakpoint, query, uji unit] | Terbukti / Gugur |
+
+Contoh: H1: pengecekan bentrok hanya dilakukan di tampilan, bukan di server (FR-4). Verifikasi: kirim permintaan booking langsung ke endpoint dengan jadwal yang bentrok.
 
 ### Titik Masalah
 
@@ -73,16 +81,16 @@ Apa yang terjadi, dalam satu sampai tiga kalimat.
 ## 9. Verifikasi
 
 - [ ] Error tidak lagi muncul pada langkah reproduksi
-- [ ] Uji regresi untuk kasus ini ditambahkan
+- [ ] Uji regresi untuk kasus ini ditambahkan (mis. booking bentrok ditolak di server)
 - [ ] Uji yang ada tetap lulus
 - [ ] Sudah diuji di staging
 
 ## 10. Pencegahan
 
-- [ ] Monitoring / alert ditambahkan
+- [ ] Monitoring / alert ditambahkan (mis. alert jika ada pesan Telegram gagal, FR-14)
 - [ ] Validasi input diperketat
 - [ ] Dokumentasi diperbarui
 
 ## 11. Catatan Tambahan
 
-[Hal lain yang perlu diketahui tim.]
+[Hal lain yang perlu diketahui tim. Rujuk FR atau NFR yang terdampak dari PRD.]
