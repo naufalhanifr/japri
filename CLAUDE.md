@@ -4,7 +4,7 @@
 
 Setiap session yang mengubah file di repo ini wajib menyelesaikan pekerjaannya dengan commit dan push. Aturan berikut berlaku untuk semua branch kecuali `main`:
 
-1. **Jangan pernah commit atau push ke `main`, dan jangan merge ke `main`.** Merge dilakukan pengguna sendiri di GitHub. Jika session berjalan di `main` atau dalam keadaan detached HEAD, buat branch baru dari posisi saat ini lalu kerjakan di sana.
+1. **Jangan pernah commit atau push langsung ke `main`.** Session biasa tidak boleh merge ke `main`. Merge hanya boleh dilakukan oleh session bernama "Github", dan hanya atas perintah eksplisit dari pengguna. Session lain yang diminta merge harus menolak dan menyarankan pengguna memakai session "Github". Jika session berjalan di `main` atau dalam keadaan detached HEAD, buat branch baru dari posisi saat ini lalu kerjakan di sana.
    - **Satu branch per fitur**, bukan per agent. Nama branch: `<tipe>/<scope>-<topik-singkat>`, misalnya `feat/booking-tolak-bentrok` atau `fix/telegram-pembatalan`. Tipe dan scope mengikuti `templates/commit.md`. Pekerjaan dokumen atau template memakai `docs/templates-<topik>`.
    - Commit per perubahan logis di dalam branch fitur yang sama. Agent yang mengerjakan tercermin dari `Co-Authored-By` atau isi pesan, bukan dari nama branch.
 2. **Hanya commit perubahan nyata.** Jangan commit file yang tidak relevan, file sementara, rahasia (token, password, API key), atau hasil build.
