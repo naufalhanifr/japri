@@ -16,7 +16,7 @@ Satu paragraf: apa yang didesain, komponen apa yang terlibat, dan perubahan terb
 ## 2. Cakupan
 
 - **Termasuk:** [layanan, modul, endpoint, dengan FR terkait]
-  - Contoh: login dua peran (FR-1), data driver (FR-2), pembuatan booking dan pencegahan bentrok (FR-3, FR-4), dashboard ketersediaan (FR-5), pengiriman pesan Telegram (FR-11 sampai FR-14)
+  - Contoh: login admin (FR-1), akses baca pegawai tanpa login (FR-5, FR-6), data driver (FR-2), pembuatan booking dan pencegahan bentrok (FR-3, FR-4), pengiriman pesan Telegram (FR-11 sampai FR-14)
 - **Tidak termasuk:** [hal yang sengaja tidak diubah]
   - Contoh: pelacakan GPS (Non-Tujuan 2), perhitungan biaya perjalanan (Non-Tujuan 4)
 
@@ -64,7 +64,7 @@ Ringkasan endpoint. Detail lengkap di `docs/api/<nama-fitur>.md`.
 
 | Method | Endpoint | Tujuan | Autentikasi | Kebutuhan terkait |
 |--------|----------|--------|-------------|-------------------|
-| GET | /drivers/availability?tanggal= | Daftar status driver (kosong / terbooking) | Pegawai atau admin | FR-5 |
+| GET | /drivers/availability?tanggal= | Daftar status driver (kosong / terbooking / cuti) | Publik (pegawai tanpa login) atau admin | FR-5, FR-6 |
 | POST | /bookings | Membuat booking, ditolak jika bentrok | Admin | FR-3, FR-4 |
 
 ## 6. Integrasi
@@ -79,17 +79,19 @@ Setiap aturan bisnis diterapkan di lapisan mana, dan bagaimana diuji.
 
 | Aturan | Diterapkan di (klien / server / database) | Cara uji | Ditelusuri ke |
 |--------|-------------------------------------------|----------|---------------|
-| [aturan] | [lapisan] | [cara] | BR-xxx |
+| [aturan] | [lapisan] | [cara] | BR-xxx (dari analisis bisnis), FR-xxx |
 
-Contoh: pegawai tidak bisa membuat booking (BR-001) → diterapkan di server pada endpoint `POST /bookings`, bukan hanya menyembunyikan tombol. Diuji dengan permintaan langsung dari akun pegawai, harus ditolak.
+Contoh: pegawai tidak bisa membuat booking (BR-001, FR-6) → diterapkan di server pada endpoint `POST /bookings`, bukan hanya menyembunyikan tombol. Diuji dengan permintaan langsung dari akun pegawai, harus ditolak.
 
 ## 8. Kebutuhan Non-Fungsional Teknis
 
-| ID | Kategori | Target | Cara memenuhi |
-|----|----------|--------|---------------|
-| NFR-1 | Latensi / Throughput / Ketersediaan / Caching / Backup / Logging / Audit | [angka] | [pendekatan] |
+NFR di PRD §7 belum memakai ID, jadi beri ID `NFR-n` di sini dan pakai kategori PRD §7 (Performa, Keamanan, Aksesibilitas, Ketersediaan, Audit). Lihat Pertanyaan Terbuka #2.
 
-Contoh: NFR-1 (Latensi): pesan Telegram dimulai dalam 1 menit setelah booking disimpan. Cara: antrean kerja dengan pemantauan.
+| ID | Kategori (PRD §7) | Target | Cara memenuhi |
+|----|-------------------|--------|---------------|
+| NFR-1 | Performa / Keamanan / Aksesibilitas / Ketersediaan / Audit | [angka, sama dengan PRD §7] | [pendekatan] |
+
+Contoh: NFR-1 (Performa): pesan Telegram dimulai dalam 1 menit setelah booking disimpan. Cara: antrean kerja dengan pemantauan.
 
 ## 9. Keamanan dan Data Pribadi
 
@@ -126,3 +128,4 @@ Contoh: driver belum terhubung ke Telegram, pesan gagal terkirim (Tinggi, Sedang
 | # | Pertanyaan | Ditanyakan ke | Status |
 |---|------------|---------------|--------|
 | 1 | [isi] | [nama / tim] | Terbuka / Terjawab |
+| 2 | PRD §7 belum memiliki ID NFR. Perlu ID tetap di PRD agar NFR-n di dokumen ini bisa ditelusuri. | Naufal Hanif R (product owner) | Terbuka |
