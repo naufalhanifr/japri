@@ -21,7 +21,7 @@ Gunakan `templates/debug-error.md` untuk laporan debug. Isi setiap bagian dengan
 - Jangan mengklaim bug sudah diperbaiki sebelum tes membuktikannya. Tulis hasil tes yang sebenarnya.
 - Jika penyebabnya ada di luar repo (layanan pihak ketiga, infrastruktur), laporkan dan jangan memaksakan perbaikan di kode.
 - Jangan membuka data pribadi pengguna di log atau laporan. Samarkan sebelum disalin.
-- Untuk bug dengan tingkat **kritis** di produksi, beri tahu koordinator segera, sebelum laporan lengkap selesai.
+- Untuk bug dengan tingkat **kritis** di produksi, beri tahu `project-manager` segera, sebelum laporan lengkap selesai.
 - Jika error berkaitan dengan kebocoran data atau akses tidak sah, eskalasi ke `security`.
 
 ## Keluaran
