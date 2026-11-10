@@ -18,9 +18,9 @@ Contoh (Monitoring Driver): pegawai bisa langsung melihat driver mana yang koson
 
 ## 2. Konteks
 
-- **Latar belakang:** [kenapa desain ini dibutuhkan, rujuk G-x dari PRD]
+- **Latar belakang:** [kenapa desain ini dibutuhkan, rujuk ID G dari PRD, mis. G1 dan G3]
 - **Pengguna utama:** [peran dari PRD, kebutuhan, dan konteks pemakaian (mobile / desktop, situasi)]
-  - Contoh: **Pegawai** BPJS Kesh (hanya melihat, read-only), **Admin** (mengelola driver dan booking). **Driver** tidak memakai website.
+  - Contoh: **Pegawai** BPJS Kesh (tanpa login, hanya melihat, read-only), **Admin** (login dengan email dan password, mengelola driver dan booking), **Driver** (tanpa akun, tidak memakai website, menerima pesan Telegram).
 - **Posisi dalam produk:** [halaman / alur mana, sebelum dan sesudah apa]
 
 ## 3. Masalah yang Harus Diselesaikan
@@ -49,15 +49,16 @@ Tulis atau tempel diagram alur:
 3. [langkah]
 
 Kondisi khusus (error, kosong, loading, offline): [jelaskan]
-- Contoh: driver nonaktif tidak muncul di daftar kosong; booking yang bentrok ditolak dengan alasan yang jelas.
+- Contoh: driver nonaktif tidak muncul di daftar kosong (FR-2); booking yang bentrok ditolak dengan alasan yang jelas (FR-4); driver yang belum terhubung Telegram ditandai peringatan (FR-12).
 
 ## 6. Kebutuhan Konten
 
 | Elemen | Sumber teks / data | Batas panjang |
 |--------|--------------------|---------------|
 | Judul | [sumber] | [mis. 40 karakter] |
-| Status driver | Kosong / Terbooking / Tidak tersedia (FR-5, FR-8) | [...] |
+| Status driver | Kosong / Terbooking / Cuti (FR-5, FR-8) | [...] |
 | Pesan error bentrok | FR-4 | — |
+| Status pengiriman Telegram | Terkirim / Gagal (FR-14) | [...] |
 
 ## 7. Panduan Visual
 
@@ -84,7 +85,7 @@ Mengacu pada NFR aksesibilitas di PRD (WCAG 2.1 AA).
 - [ ] Target sentuh minimal 44×44 px
 - [ ] Navigasi keyboard dan urutan fokus jelas
 - [ ] Label dan teks alternatif untuk ikon dan gambar
-- [ ] Status driver (kosong / terbooking) tidak hanya dikomunikasikan lewat warna
+- [ ] Status driver (kosong / terbooking / cuti) tidak hanya dikomunikasikan lewat warna
 
 ## 10. Interaksi & Animasi
 
@@ -104,6 +105,8 @@ Sesuaikan dengan G di PRD.
 
 - [ ] [kriteria yang dapat diuji, mis. pegawai menemukan driver kosong tanpa chat admin (G1)]
 - [ ] [mis. riwayat satu driver ditemukan dalam waktu di bawah 30 detik (G3)]
+- [ ] [mis. booking hanya bisa dibuat dari akun admin, tanpa tombol booking untuk pegawai (G2, FR-6)]
+- [ ] [mis. status pengiriman Telegram terlihat admin, dan pesan yang gagal ditandai (G4, FR-14)]
 
 ## 13. Jadwal Review
 
