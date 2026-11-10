@@ -5,7 +5,7 @@
 | | |
 |---|---|
 | **Penulis** | Agent `system-analyst`, atas permintaan Naufal Hanif R |
-| **Status** | Draft (menunggu persetujuan `frontend`, `backend`, dan `security`) |
+| **Status** | Disetujui oleh Naufal Hanif R (2026-11-10). Menunggu review `security` sebelum implementasi FR-1, FR-2, dan FR-12 |
 | **Terakhir diubah** | 2026-11-10 |
 | **Terkait** | `docs/system/monitoring-driver.md`, `templates/prd.md` |
 | **Versi** | `v1`. Prefiks path `/api/v1` |
