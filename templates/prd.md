@@ -8,7 +8,7 @@
 | **Penyetuju** | Naufal Hanif R (disetujui 2026-11-10) |
 | **Status** | Disetujui |
 | **Terakhir diubah** | 2026-11-10 |
-| **Terkait** | Figma JAPRI: [Flow, Sistem Analis, Bisnis Analis](https://www.figma.com/design/zWf8gSyP4MXTybNm8LZ54d/JAPRI?node-id=1-3), [Design System](https://www.figma.com/design/zWf8gSyP4MXTybNm8LZ54d/JAPRI?node-id=1-2), [Design](https://www.figma.com/design/zWf8gSyP4MXTybNm8LZ54d/JAPRI?node-id=0-1). Jira: [project KAN](https://naufalhanifr.atlassian.net/jira/software/projects/KAN) |
+| **Terkait** | Figma JAPRI: [Flow, Sistem Analis, Bisnis Analis](https://www.figma.com/design/zWf8gSyP4MXTybNm8LZ54d/JAPRI?node-id=1-3), [Design System](https://www.figma.com/design/zWf8gSyP4MXTybNm8LZ54d/JAPRI?node-id=1-2), [Design](https://www.figma.com/design/zWf8gSyP4MXTybNm8LZ54d/JAPRI?node-id=0-1). Jira: [project JAPRI](https://naufalhanifr.atlassian.net/jira/software/projects/JAPRI) |
 
 ## 1. Ringkasan
 
