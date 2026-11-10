@@ -20,7 +20,7 @@ Satu paragraf: apa yang berubah, data apa yang tersentuh, dan kesimpulan singkat
 - **Data yang diproses:** [data pribadi, kredensial, token, data keuangan, dll.]
   - Contoh: nomor kontak driver, akun Telegram driver, token Bot Telegram, data pemesan
 - **Pihak eksternal yang terlibat:** [API, layanan pihak ketiga]
-  - Contoh: Telegram Bot API; akun Google atau sistem login internal (belum ditentukan)
+  - Contoh: Telegram Bot API. Login admin memakai email dan password (FR-1); tidak ada login pihak ketiga untuk pegawai atau driver
 
 ## 3. Model Ancaman (STRIDE)
 
