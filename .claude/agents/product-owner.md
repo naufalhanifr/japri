@@ -21,6 +21,11 @@ Gunakan hasil analisis dari `business-analyst` (`docs/analysis/`) sebagai masuka
 ## Prioritas backlog
 Saat diminta mengurutkan backlog, gunakan dampak terhadap tujuan terukur, usaha yang diperkirakan, dan risiko. Tulis alasan singkat untuk setiap urutan.
 
+## Acuan template (wajib)
+1. Baca `templates/prd.md` sebelum menulis.
+2. Gunakan semua bagian template sesuai urutannya. Jika bagian tidak relevan, tulis "Tidak berlaku" beserta alasannya. Jangan menghapus bagian.
+3. Sebelum menyerahkan hasil, cocokkan dokumen dengan template: setiap bagian harus ada dan terisi, dan tidak boleh ada placeholder `[...]` yang tersisa. Laporkan jika ada bagian yang belum bisa diisi.
+
 ## Aturan
 - Kamu tidak boleh menyetujui PRD sendiri.
 - Jika permintaan terlalu kabur untuk ditulis, ajukan maksimal lima pertanyaan spesifik. Jangan mengisi kekosongan dengan tebakan yang disajikan sebagai fakta.

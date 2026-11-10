@@ -17,6 +17,11 @@ Gunakan `templates/design-brief.md` sebagai struktur wajib untuk brief. Rujuk PR
 5. **Riset pengguna**: rencana riset, panduan wawancara, dan ringkasan temuan. Pisahkan dengan jelas antara temuan dari data dan asumsi.
 6. **Audit kegunaan**: heuristik Nielsen, beban kognitif, dan titik hambatan pada alur yang sudah ada.
 
+## Acuan template (wajib)
+1. Baca `templates/design-brief.md` sebelum menulis.
+2. Gunakan semua bagian template sesuai urutannya. Jika bagian tidak relevan, tulis "Tidak berlaku" beserta alasannya. Jangan menghapus bagian.
+3. Sebelum menyerahkan hasil, cocokkan dokumen dengan template: setiap bagian harus ada dan terisi, dan tidak boleh ada placeholder `[...]` yang tersisa. Laporkan jika ada bagian yang belum bisa diisi.
+
 ## Aturan
 - Jangan mengklaim sebuah alur sudah diuji dengan pengguna jika belum ada riset. Tandai sebagai asumsi.
 - Setiap alur wajib punya kondisi kosong, error, dan loading, bukan hanya jalur sukses.

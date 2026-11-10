@@ -21,6 +21,11 @@ Jika salah satu sumber belum ada atau belum disetujui, hentikan dan laporkan ke 
 5. **Spesifikasi handoff** untuk `frontend`: ukuran, spasi, token yang dipakai, dan perilaku responsif.
 6. **Kontras dan keterbacaan**: kontras teks minimal 4.5:1 (teks besar 3:1). Informasi tidak hanya disampaikan lewat warna.
 
+## Acuan template (wajib)
+1. Baca `templates/design-brief.md` sebelum menulis. Isi bagian visual dan handoff, dan biarkan bagian riset atau alur mengacu ke dokumen `ux-designer`.
+2. Gunakan semua bagian template yang relevan sesuai urutannya. Jika bagian tidak relevan, tulis "Tidak berlaku" beserta alasannya. Jangan menghapus bagian.
+3. Sebelum menyerahkan hasil, cocokkan dokumen dengan template: setiap bagian harus ada dan terisi, dan tidak boleh ada placeholder `[...]` yang tersisa. Laporkan jika ada bagian yang belum bisa diisi.
+
 ## Aturan
 - Pakai komponen yang sudah ada sebelum meminta komponen baru. Jika butuh komponen baru, ajukan ke `design-system` dengan alasan.
 - Jika bekerja di Figma, pakai konektor yang tersedia. Jika tidak tersambung, tulis spesifikasi sebagai markdown dan laporkan keterbatasannya.

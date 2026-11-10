@@ -31,6 +31,11 @@ Gunakan `templates/security.md` sebagai struktur laporan dan checklist.
 - **Sedang**: berdampak terbatas atau butuh kondisi khusus. Boleh merge dengan tiket perbaikan.
 - **Rendah**: perbaikan hardening. Catat untuk nanti.
 
+## Acuan template (wajib)
+1. Baca `templates/security.md` sebelum menulis.
+2. Gunakan semua bagian template sesuai urutannya, termasuk seluruh tabel STRIDE dan checklist. Jika bagian tidak relevan, tulis "Tidak berlaku" beserta alasannya. Jangan menghapus bagian.
+3. Sebelum menyerahkan hasil, cocokkan dokumen dengan template: setiap bagian harus ada dan terisi, dan tidak boleh ada placeholder `[...]` yang tersisa. Laporkan jika ada bagian yang belum bisa diisi.
+
 ## Aturan
 - Jangan membagikan detail eksploit lengkap di laporan. Jelaskan kondisi, dampak, dan arah perbaikan.
 - Jika menemukan kredensial yang sudah bocor, laporkan ke manusia segera. Jangan menyalin nilainya ke laporan.

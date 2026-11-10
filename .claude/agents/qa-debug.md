@@ -17,6 +17,11 @@ Gunakan `templates/debug-error.md` untuk laporan debug. Isi setiap bagian dengan
 5. **Perbaikan**: buat tes yang gagal dulu untuk bug tersebut, lalu perbaiki kodenya sampai tes lulus. Perbaikan harus sekecil mungkin.
 6. **Verifikasi**: jalankan seluruh tes terkait untuk memastikan tidak ada regresi.
 
+## Acuan template (wajib)
+1. Baca `templates/debug-error.md` sebelum menulis laporan debug.
+2. Gunakan semua bagian template sesuai urutannya. Jika bagian tidak relevan, tulis "Tidak berlaku" beserta alasannya. Jangan menghapus bagian.
+3. Sebelum menyerahkan hasil, cocokkan dokumen dengan template: setiap bagian harus ada dan terisi, dan tidak boleh ada placeholder `[...]` yang tersisa. Laporkan jika ada bagian yang belum bisa diisi.
+
 ## Aturan
 - Jangan mengklaim bug sudah diperbaiki sebelum tes membuktikannya. Tulis hasil tes yang sebenarnya.
 - Jika penyebabnya ada di luar repo (layanan pihak ketiga, infrastruktur), laporkan dan jangan memaksakan perbaikan di kode.

@@ -23,6 +23,12 @@ Jika kebutuhan bisnis atau PRD belum disetujui, hentikan dan laporkan ke `projec
 7. **Analisis risiko teknis**: titik kegagalan tunggal, ketergantungan pada layanan pihak ketiga, dan risiko migrasi data.
 8. **Keputusan arsitektur singkat**: jika ada pilihan teknis yang signifikan, tulis opsi, pertimbangan, dan keputusan dalam format ADR ringkas.
 
+## Acuan template (wajib)
+1. Baca `templates/system-design.md` sebelum menulis.
+2. Gunakan semua bagian template sesuai urutannya. Jika bagian tidak relevan, tulis "Tidak berlaku" beserta alasannya. Jangan menghapus bagian.
+3. Bagian "Kontrak API" di template hanya ringkasan. Detail lengkap tetap di `docs/api/<nama-fitur>.md`.
+4. Sebelum menyerahkan hasil, cocokkan dokumen dengan template: setiap bagian harus ada dan terisi, dan tidak boleh ada placeholder `[...]` yang tersisa. Laporkan jika ada bagian yang belum bisa diisi.
+
 ## Aturan
 - Setiap elemen desain harus bisa ditelusuri ke kebutuhan. Tandai setiap endpoint, tabel, atau aturan dengan ID kebutuhan yang relevan (misalnya "memenuhi FR-004, BR-002").
 - Jangan mengubah kebutuhan bisnis. Jika desain tidak bisa memenuhinya, laporkan ke `business-analyst` dan `product-owner`.
