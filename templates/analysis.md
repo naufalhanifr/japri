@@ -17,11 +17,14 @@ Contoh (Monitoring Driver): semua driver dijadwalkan oleh admin, dan pegawai tid
 
 ## 2. Tujuan Bisnis
 
-Gunakan ID G dari PRD agar tidak ada dua sistem penomoran.
+Gunakan ID G dari PRD agar tidak ada dua sistem penomoran. Salin G1–G4 dari PRD §3 apa adanya. Jangan membuat ID G baru di dokumen ini.
 
 | # | Tujuan | Metrik | Target |
 |---|--------|--------|--------|
-| G1 | [tujuan] | [metrik] | [angka] |
+| G1 | Pegawai tidak perlu chat admin hanya untuk mengetahui driver mana yang kosong | Jumlah chat ke admin yang menanyakan ketersediaan driver per minggu | Turun 70% dibanding baseline 2 minggu sebelum rilis |
+| G2 | Admin tetap menjadi satu-satunya pengatur penugasan driver | Persentase booking yang dibuat oleh admin | 100% |
+| G3 | Riwayat penugasan driver tersedia dan mudah dicari | Waktu mencari riwayat satu driver | Di bawah 30 detik |
+| G4 | Driver langsung tahu saat ditugaskan tanpa menunggu chat dari admin | Persentase booking yang notifikasinya terkirim ke driver | 95% atau lebih |
 
 ## 3. Pemangku Kepentingan
 
@@ -65,21 +68,25 @@ Contoh:
 - BR-002: Satu driver hanya menjalankan satu booking pada satu waktu (Asumsi PRD).
 - BR-003: Driver yang nonaktif tidak muncul di daftar kosong dan tidak bisa dibooking (FR-2).
 
-## 7. Kebutuhan
+## 7. Persyaratan
+
+ID, teks, dan prioritas FR serta NFR harus sama dengan PRD §6 dan §7. Jangan menambah ID baru di sini sebelum ID tersebut ada di PRD.
 
 ### Fungsional
 
-| ID | Kebutuhan | Prioritas (Must / Should / Could) | Terkait aturan |
-|----|-----------|----------------------------------|----------------|
-| FR-1 | [kebutuhan] | [prioritas] | [BR-xxx] |
+| ID | Persyaratan | Prioritas (Must / Should / Could) | Terkait aturan |
+|----|-------------|----------------------------------|----------------|
+| FR-1 | [persyaratan, sama dengan PRD §6] | [prioritas] | [BR-xxx] |
 
 ### Non-Fungsional
 
-| ID | Kategori | Kebutuhan | Target terukur |
-|----|----------|-----------|----------------|
-| NFR-1 | Kinerja / Keamanan / Ketersediaan / Kepatuhan / Kapasitas | [kebutuhan] | [angka] |
+> PRD §7 belum memakai ID NFR. Sampai product-owner menambahkan ID di PRD, beri ID NFR-n di sini, pakai kategori dan butir yang ada di PRD §7, lalu catat di bagian 10 sebagai pertanyaan terbuka.
 
-Contoh: NFR-1 (Kinerja): dashboard memuat dalam 2 detik untuk jumlah driver dan booking yang ada (usulan).
+| ID | Kategori | Persyaratan | Target terukur |
+|----|----------|-------------|----------------|
+| NFR-1 | Performa / Keamanan / Aksesibilitas / Ketersediaan / Audit | [persyaratan, sama dengan PRD §7] | [angka] |
+
+Contoh: NFR-1 (Performa): dashboard memuat dalam 2 detik untuk jumlah driver dan booking yang ada (usulan awal, sudah disetujui pemilik produk, PRD §7).
 
 ## 8. Kriteria Penerimaan
 
@@ -93,7 +100,7 @@ Tulis per kebutuhan dalam format Given-When-Then.
 - **Proses yang berubah:** [daftar]
 - **Tim yang terdampak:** [daftar]
 - **Sistem yang terdampak:** [daftar]
-- **Risiko perubahan:** [daftar, rujuk Risiko di PRD]
+- **Risiko perubahan:** [daftar, rujuk Risiko di PRD §9]
 
 ## 10. Asumsi dan Pertanyaan Terbuka
 
@@ -101,4 +108,4 @@ Tulis per kebutuhan dalam format Given-When-Then.
 |---|---------------------|---------------|--------|
 | 1 | [isi] | [nama] | Terbuka / Terjawab |
 
-Contoh: berapa jumlah driver, pegawai, dan booking per bulan? (Pertanyaan Terbuka PRD) — ditanyakan ke: [nama], status: Terbuka.
+Contoh: berapa jumlah driver, pegawai, dan booking per bulan? (PRD §10, Belum diputuskan) — ditanyakan ke: [nama], status: Terbuka.
