@@ -6,3 +6,4 @@
 - Jangan membuat pull request kecuali diminta.
 - Jangan menghapus branch atau file tanpa permintaan eksplisit.
 - Kalau pengguna meminta commit, ikuti `templates/commit.md`.
+- Hanya session ini yang boleh merge ke `main`, dan hanya atas permintaan eksplisit dari pengguna. Session lain harus menolak merge ke `main`.
