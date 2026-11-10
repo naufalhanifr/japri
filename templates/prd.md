@@ -52,7 +52,7 @@ Peran pengguna:
 Skenario utama (alur langkah demi langkah):
 
 1. Admin menambahkan driver baru ke sistem (nama, nomor kontak, status aktif). Admin juga dapat mengubah data driver atau menonaktifkannya jika driver berhenti bertugas.
-2. Alvin (admin) menyetup koneksi Telegram untuk semua driver satu kali, menggunakan kode salin yang disediakan sistem (FR-12). Setelah setup awal, pengiriman berjalan otomatis.
+2. Alvin (admin) menyetup koneksi Telegram untuk setiap driver satu kali, menggunakan kode salin yang disediakan sistem (FR-12). Setelah setup awal, pengiriman berjalan otomatis.
 3. Pegawai membuka website tanpa login dan melihat daftar driver beserta statusnya: driver mana yang sedang kosong, driver yang sedang cuti, dan untuk jam berapa driver lain sudah terbooking.
 4. Saat menemukan driver yang kosong, pegawai menghubungi admin lewat chat untuk meminta booking. Pegawai tidak bisa membuat booking sendiri.
 5. Admin login ke web admin dan membuat booking baru dengan memilih driver, tanggal dan jam mulai/selesai, tujuan, serta nama pemesan. Sistem menolak jika jadwal driver bertabrakan (FR-4).
@@ -84,11 +84,11 @@ Skenario utama (alur langkah demi langkah):
 
 Nilai di bawah adalah usulan awal yang sudah disetujui pemilik produk, kecuali ditandai lain.
 
-- **Performa:** Dashboard memuat dalam 2 detik untuk jumlah driver dan booking yang ada. Pengiriman pesan Telegram dimulai dalam 1 menit setelah booking disimpan.
-- **Keamanan:** Pembatasan peran dilakukan di server, bukan hanya di tampilan. Token bot Telegram disimpan sebagai rahasia dan tidak ditampilkan di website. Nomor kontak driver tidak boleh ditampilkan atau disebarkan ke pegawai. Lihat `templates/security.md`.
-- **Aksesibilitas:** WCAG 2.1 AA.
-- **Ketersediaan / skala:** Ketersediaan 99% pada jam kerja. Jumlah driver dan booking per bulan belum diketahui, lihat Pertanyaan Terbuka.
-- **Audit:** Setiap perubahan booking dan data driver tercatat dengan waktu dan pelaku, untuk mendukung G2.
+- **NFR-1 Performa:** Dashboard memuat dalam 2 detik untuk jumlah driver dan booking yang ada. Pengiriman pesan Telegram dimulai dalam 1 menit setelah booking disimpan.
+- **NFR-2 Keamanan:** Pembatasan peran dilakukan di server, bukan hanya di tampilan. Token bot Telegram disimpan sebagai rahasia dan tidak ditampilkan di website. Nomor kontak driver tidak boleh ditampilkan atau disebarkan ke pegawai. Lihat `templates/security.md`.
+- **NFR-3 Aksesibilitas:** WCAG 2.1 AA.
+- **NFR-4 Ketersediaan / skala:** Ketersediaan 99% pada jam kerja. Jumlah driver dan booking per bulan belum diketahui, lihat Pertanyaan Terbuka.
+- **NFR-5 Audit:** Setiap perubahan booking dan data driver tercatat dengan waktu dan pelaku, untuk mendukung G2.
 
 ## 8. Asumsi & Ketergantungan
 
@@ -119,9 +119,9 @@ Nilai di bawah adalah usulan awal yang sudah disetujui pemilik produk, kecuali d
 - [x] Pegawai tidak perlu login. Hanya admin yang login dengan email dan password (FR-1, FR-6).
 - [x] Driver yang sedang cuti tampil sebagai "Cuti" dan tidak bisa dibooking (FR-8).
 - [x] Riwayat booking disimpan selamanya sebagai arsip kantor (FR-7).
-- [x] Admin (Alvin) menyetup Telegram untuk semua driver satu kali dengan kode salin, lalu pengiriman otomatis (FR-12).
-- [x] Nomor kontak driver tidak boleh disebarkan ke pegawai (NFR keamanan).
-- [x] Nilai NFR usulan disetujui.
+- [x] Admin (Alvin) menyetup Telegram untuk setiap driver satu kali dengan kode salin, lalu pengiriman otomatis (FR-12).
+- [x] Nomor kontak driver tidak boleh disebarkan ke pegawai (NFR-2).
+- [x] Nilai NFR usulan disetujui (NFR-1 s.d. NFR-5).
 
 **Belum diputuskan:**
 
