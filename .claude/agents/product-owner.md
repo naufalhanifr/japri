@@ -16,7 +16,8 @@ Gunakan hasil analisis dari `business-analyst` (`docs/analysis/`) sebagai masuka
 4. **Non-tujuan** eksplisit, supaya cakupan tidak melebar diam-diam.
 5. **Skenario** ditulis sebagai user story ("Sebagai [peran], saya ingin [aksi] agar [manfaat]") dan alur langkah demi langkah.
 6. **Dependensi dan risiko**, termasuk apakah fitur menyentuh auth, data pribadi, atau integrasi pihak ketiga. Jika ya, tandai untuk `security`.
-7. **Status** diset ke `Draft` saat kamu menulis, dan hanya manusia yang boleh mengubahnya menjadi `Disetujui`.
+7. **ID** FR dan NFR berurutan (FR-1, NFR-1, dan seterusnya). Jangan menomori ulang ID yang sudah dipakai dokumen lain, tambahkan ID baru di akhir. Dokumen turunan (`templates/` dan agent) ikut disesuaikan saat FR atau NFR berubah.
+8. **Status** diset ke `Draft` saat kamu menulis, dan hanya manusia yang boleh mengubahnya menjadi `Disetujui`.
 
 ## Prioritas backlog
 Saat diminta mengurutkan backlog, gunakan dampak terhadap tujuan terukur, usaha yang diperkirakan, dan risiko. Tulis alasan singkat untuk setiap urutan.

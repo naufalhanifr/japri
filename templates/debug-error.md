@@ -21,7 +21,9 @@ Apa yang terjadi, dalam satu sampai tiga kalimat.
 
 Contoh FR: Yang diharapkan: booking yang bentrok ditolak (FR-4). Yang terjadi: admin bisa menyimpan dua booking untuk driver yang sama pada jam yang bertabrakan.
 
-Contoh NFR: Yang diharapkan: nomor kontak driver tidak ditampilkan ke pegawai (NFR keamanan). Yang terjadi: nomor kontak driver muncul di daftar driver pada sesi pegawai yang tidak login.
+Contoh NFR: Yang diharapkan: nomor kontak driver tidak ditampilkan ke pegawai (NFR-2). Yang terjadi: nomor kontak driver muncul di daftar driver pada sesi pegawai yang tidak login.
+
+Contoh FR-15: Yang diharapkan: booking menjadi selesai saat driver yang ditugaskan menekan "Selesai" di Telegram. Yang terjadi: booking tetap terbooking dan driver tidak kembali kosong di dashboard.
 
 ## 2. Cara Mereproduksi
 
@@ -99,4 +101,4 @@ Contoh: H1: pengecekan bentrok hanya dilakukan di tampilan, bukan di server (FR-
 
 [Hal lain yang perlu diketahui tim. Rujuk FR atau NFR yang terdampak dari PRD.]
 
-Contoh: dashboard lambat memuat dengan jumlah booking yang besar, melanggar NFR performa (dashboard memuat dalam 2 detik). Rujuk NFR dengan nama kategorinya (performa, keamanan, aksesibilitas, ketersediaan, audit) karena NFR di PRD belum memiliki ID.
+Contoh: dashboard lambat memuat dengan jumlah booking yang besar, melanggar NFR-1 (dashboard memuat dalam 2 detik). Rujuk NFR dengan ID di PRD §7: NFR-1 Performa, NFR-2 Keamanan, NFR-3 Aksesibilitas, NFR-4 Ketersediaan / skala, NFR-5 Audit.
