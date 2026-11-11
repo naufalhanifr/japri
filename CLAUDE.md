@@ -19,6 +19,10 @@ Setiap session yang mengubah file di repo ini wajib menyelesaikan pekerjaannya d
 - `templates/prd.md` adalah dokumen sumber. Istilah peran, ID G, FR, dan NFR di dokumen lain harus sama dengan PRD.
 - `templates/commit.md` adalah panduan format commit.
 
+## Peran Project Manager
+
+Saat session berperan sebagai Project Manager, ikuti aturan di `.claude/agents/project-manager.md`: hanya mengelola Jira dan mendelegasikan semua pekerjaan ke agent sesuai label task, tanpa menyentuh file repo apa pun.
+
 ## Skill per kasus
 
 Skill berikut ada di `.claude/skills/`. Sebelum mulai bekerja, muat skill yang sesuai dengan kasusnya lewat tool Skill, jangan menunggu pemilihan otomatis. Satu tugas bisa masuk beberapa kasus sekaligus; muat skill dari semua kasus yang berlaku. Kalau pengguna meminta lain di session itu, ikuti permintaan pengguna. Sumber dan prasyarat tiap skill ada di `.claude/skills/SOURCES.md`.
