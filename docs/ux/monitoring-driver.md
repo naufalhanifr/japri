@@ -6,7 +6,8 @@
 |---|---|
 | **Pemohon** | Naufal Hanif R (pemilik PRD), lewat `project-manager` |
 | **Designer** | Agent `ux-designer` |
-| **Status** | Draft, menunggu persetujuan manusia |
+| **Penyetuju** | Naufal Hanif R (disetujui 2026-11-11) |
+| **Status** | Disetujui |
 | **Target rilis** | Belum ada tanggal. Mengikuti fase PRD bagian 11: MVP, Iterasi 2, Iterasi 3 |
 | **Link PRD** | `templates/prd.md` (Disetujui 2026-11-10). `docs/prd/`, `docs/analysis/`, dan `docs/debug/` sudah usang dan tidak dipakai. Selaras dengan `docs/system/monitoring-driver.md` dan `docs/api/monitoring-driver.md` (disetujui 2026-11-10) |
 
