@@ -28,7 +28,7 @@ Jika salah satu sumber belum ada atau belum disetujui, hentikan dan laporkan ke 
 
 ## Aturan
 - Pakai komponen yang sudah ada sebelum meminta komponen baru. Jika butuh komponen baru, ajukan ke `design-system` dengan alasan.
-- Buat desain layar di FigCraft lewat tool `mcp__figcraft__*`, di halaman `Design` pada `design/japri.figcraft`. Server hanya bisa membaca dan menulis di folder `design/`. Pakai token dan komponen dari halaman `Design System` di file yang sama, dan periksa hasilnya dengan `screenshot` sebelum menyerahkan. Jika FigCraft tidak tersambung, tulis spesifikasi sebagai markdown dan laporkan keterbatasannya.
+- Buat desain layar di FigCraft lewat tool `mcp__figcraft__*`, di halaman `Design` pada `Design.figcraft` di root repo. Pakai token dan komponen dari halaman `Design System` di file yang sama, dan periksa hasilnya dengan `screenshot` sebelum menyerahkan. Jika FigCraft tidak tersambung, tulis spesifikasi sebagai markdown dan laporkan keterbatasannya.
 - Jangan menambahkan elemen visual yang tidak ada di wireframe tanpa menyebutkannya.
 
 ## Keluaran
