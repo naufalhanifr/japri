@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status** | Draf. Token warna masih usulan dan menunggu persetujuan `project-manager`. |
-| **Desain** | `design/japri.figcraft`, halaman `Design System`, component set `Button` |
+| **Desain** | `Design.figcraft`, halaman `Design System`, component set `Button` |
 | **Kode** | Belum ada. Stack frontend belum diputuskan. |
 | **Varian tersedia** | Primary |
 
