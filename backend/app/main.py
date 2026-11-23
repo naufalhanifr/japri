@@ -7,6 +7,7 @@ from .config import Settings
 from .db import connect
 from .errors import install_error_handlers
 from .notifier import NullNotifier
+from .public import TTLCache
 from .routers.admin import admin_router, login_router
 from .routers.public import public_router
 from .timeutil import utcnow
@@ -40,6 +41,7 @@ def create_app(settings=None, clock=utcnow, notifier=None):
     app.state.settings = settings
     app.state.clock = clock
     app.state.notifier = notifier or NullNotifier()
+    app.state.public_cache = TTLCache(settings.public_cache_seconds)
     install_error_handlers(app)
     app.include_router(login_router)
     app.include_router(admin_router)
