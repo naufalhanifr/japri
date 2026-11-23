@@ -18,6 +18,10 @@ def get_now(request: Request):
     return request.app.state.clock()
 
 
+def get_notifier(request: Request):
+    return request.app.state.notifier
+
+
 def get_conn(request: Request):
     conn = connect(request.app.state.settings.db_path)
     try:

@@ -6,6 +6,7 @@ from . import migrate
 from .config import Settings
 from .db import connect
 from .errors import install_error_handlers
+from .notifier import NullNotifier
 from .routers.admin import admin_router, login_router
 from .routers.public import public_router
 from .timeutil import utcnow
@@ -30,7 +31,7 @@ def _configure_logging():
         log.addHandler(handler)
 
 
-def create_app(settings=None, clock=utcnow):
+def create_app(settings=None, clock=utcnow, notifier=None):
     settings = settings or Settings.from_env()
     _configure_logging()
     ensure_schema_current(settings.db_path)
@@ -38,6 +39,7 @@ def create_app(settings=None, clock=utcnow):
     app = FastAPI(title="Japri API", **docs)
     app.state.settings = settings
     app.state.clock = clock
+    app.state.notifier = notifier or NullNotifier()
     install_error_handlers(app)
     app.include_router(login_router)
     app.include_router(admin_router)

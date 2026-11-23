@@ -4,7 +4,7 @@ import os
 import sys
 from pathlib import Path
 
-from . import auth, migrate
+from . import auth, divisions, migrate
 from .config import Settings
 from .db import connect
 from .timeutil import utcnow
@@ -43,6 +43,14 @@ def main(argv=None, env=None):
     p.add_argument("--email", required=True)
     p.add_argument("--password-stdin", action="store_true")
 
+    p = sub.add_parser("add-division", help="tambah Divisi ke dropdown booking")
+    p.add_argument("--name", required=True)
+    p.add_argument("--sort-order", type=int, default=None, help="default: setelah Divisi terakhir")
+
+    p = sub.add_parser("set-division-active", help="aktifkan atau nonaktifkan Divisi (tidak pernah dihapus)")
+    p.add_argument("--name", required=True)
+    p.add_argument("--active", choices=("true", "false"), required=True)
+
     args = parser.parse_args(argv)
     settings = Settings.from_env(env if env is not None else os.environ)
     conn = _connect(settings)
@@ -51,9 +59,15 @@ def main(argv=None, env=None):
             print("Migrasi diterapkan:", migrate.up(conn, args.to) or "tidak ada")
         elif args.command == "migrate-down":
             print("Migrasi dibatalkan:", migrate.down(conn, args.steps) or "tidak ada")
+        elif migrate.pending(conn):
+            raise ValueError("Skema belum terbaru. Jalankan: python -m app.cli migrate")
+        elif args.command == "add-division":
+            divisions.add(conn, args.name, args.sort_order)
+            print("Divisi ditambahkan.")
+        elif args.command == "set-division-active":
+            divisions.set_active(conn, args.name, args.active == "true")
+            print("Status Divisi diubah.")
         else:
-            if migrate.pending(conn):
-                raise ValueError("Skema belum terbaru. Jalankan: python -m app.cli migrate")
             password = _read_password(args)
             if args.command == "create-admin":
                 auth.create_admin(conn, args.email, args.display_name, password, utcnow())

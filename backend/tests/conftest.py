@@ -46,9 +46,29 @@ def admin_id(conn, clock):
     return auth.create_admin(conn, EMAIL, "Admin Uji", PASSWORD, clock())
 
 
+class RecordingNotifier:
+    """Mencatat titik panggil pesan dan memastikan dipanggil di dalam transaksi perubahan datanya."""
+
+    def __init__(self):
+        self.calls = []
+
+    def enqueue(self, conn, *, kind, booking_id, driver_id, now):
+        assert conn.in_transaction
+        self.calls.append((kind, booking_id, driver_id))
+
+    @property
+    def kinds(self):
+        return [c[0] for c in self.calls]
+
+
 @pytest.fixture
-def app(settings, conn, clock):
-    return create_app(settings, clock)
+def notifier():
+    return RecordingNotifier()
+
+
+@pytest.fixture
+def app(settings, conn, clock, notifier):
+    return create_app(settings, clock, notifier)
 
 
 @pytest.fixture
@@ -67,3 +87,42 @@ def session(client, admin_id):
     r = login(client)
     assert r.status_code == 200
     return client, r.json()["csrf_token"]
+
+
+def hdr(csrf):
+    return {"X-CSRF-Token": csrf}
+
+
+@pytest.fixture
+def division_id(conn):
+    return conn.execute("INSERT INTO division (name, sort_order) VALUES ('Operasional', 1)").lastrowid
+
+
+def driver_body(**kw):
+    body = {"name": "Budi Santoso", "phone": "0812-3456-7890", "vehicle_type": "Innova", "vehicle_plate": "b 1234 xx"}
+    body.update(kw)
+    return body
+
+
+def make_driver(session, **kw):
+    client, csrf = session
+    r = client.post("/api/admin/drivers", json=driver_body(**kw), headers=hdr(csrf))
+    assert r.status_code == 201, r.text
+    return r.json()
+
+
+def booking_body(driver_id, division_id, **kw):
+    body = {
+        "driver_id": driver_id, "requester_name": "Maya", "division_id": division_id, "destination": "Bandara Halim",
+        "schedule_type": "per_jam", "start_date": "2026-11-23", "end_date": "2026-11-23",
+        "start_time": "14:00", "end_time": "16:00",
+    }
+    body.update(kw)
+    return body
+
+
+def make_booking(session, driver_id, division_id, **kw):
+    client, csrf = session
+    r = client.post("/api/admin/bookings", json=booking_body(driver_id, division_id, **kw), headers=hdr(csrf))
+    assert r.status_code == 201, r.text
+    return r.json()
