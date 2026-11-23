@@ -69,7 +69,7 @@ def test_reset_unknown_email_fails(monkeypatch, env, admin_id, capsys):
 
 def test_migrate_down_cli(monkeypatch, env):
     run(monkeypatch, env, ["migrate"])
-    assert run(monkeypatch, env, ["migrate-down", "--steps", "2"]) == 0
+    assert run(monkeypatch, env, ["migrate-down", "--steps", "4"]) == 0
     from app import migrate
 
     assert migrate.current_version(connect(env["JAPRI_DB_PATH"])) == 0
