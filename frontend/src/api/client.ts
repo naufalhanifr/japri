@@ -1,4 +1,4 @@
-export type ApiErrorKind = 'network' | 'rate_limited' | 'not_found' | 'validation' | 'server'
+export type ApiErrorKind = 'network' | 'rate_limited' | 'not_found' | 'validation' | 'unauthenticated' | 'csrf' | 'server'
 
 export class ApiError extends Error {
   readonly kind: ApiErrorKind
@@ -45,21 +45,37 @@ async function readErrorBody(response: Response): Promise<{ code: string | null;
   }
 }
 
-export async function getJson<T>(
-  path: string,
-  params: Record<string, string> | undefined,
-  signal: AbortSignal,
-): Promise<T> {
+interface RequestOptions {
+  method?: 'GET' | 'POST' | 'PATCH'
+  params?: Record<string, string>
+  body?: unknown
+  headers?: Record<string, string>
+  signal?: AbortSignal
+}
+
+export async function requestJson<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  const { method = 'GET', params, body, headers, signal } = options
   const query = params && Object.keys(params).length > 0 ? `?${new URLSearchParams(params)}` : ''
   let response: Response
   try {
-    response = await fetch(`${path}${query}`, { signal, headers: { Accept: 'application/json' } })
+    response = await fetch(`${path}${query}`, {
+      method,
+      signal,
+      credentials: 'same-origin',
+      headers: {
+        Accept: 'application/json',
+        ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
+        ...headers,
+      },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    })
   } catch (error) {
     if (isAbortError(error)) throw error
     throw new ApiError('network', 'Tidak bisa terhubung ke server.')
   }
 
   if (response.ok) {
+    if (response.status === 204) return undefined as T
     try {
       return (await response.json()) as T
     } catch {
@@ -68,14 +84,26 @@ export async function getJson<T>(
   }
 
   const { code, message } = await readErrorBody(response)
-  const options = { status: response.status, code: code ?? undefined }
+  const errorOptions = { status: response.status, code: code ?? undefined }
   if (response.status === 429) {
     const retryAfterMs = parseRetryAfter(response.headers.get('Retry-After')) ?? undefined
-    throw new ApiError('rate_limited', message ?? 'Terlalu banyak permintaan.', { ...options, retryAfterMs })
+    throw new ApiError('rate_limited', message ?? 'Terlalu banyak permintaan.', { ...errorOptions, retryAfterMs })
   }
-  if (response.status === 404) throw new ApiError('not_found', message ?? 'Data tidak ditemukan.', options)
+  if (response.status === 401) throw new ApiError('unauthenticated', message ?? 'Silakan masuk terlebih dahulu.', errorOptions)
+  if (response.status === 403 && code === 'csrf_invalid') {
+    throw new ApiError('csrf', message ?? 'Token keamanan tidak valid.', errorOptions)
+  }
+  if (response.status === 404) throw new ApiError('not_found', message ?? 'Data tidak ditemukan.', errorOptions)
   if (response.status === 422 || response.status === 400) {
-    throw new ApiError('validation', message ?? 'Permintaan tidak valid.', options)
+    throw new ApiError('validation', message ?? 'Permintaan tidak valid.', errorOptions)
   }
-  throw new ApiError('server', message ?? 'Server sedang bermasalah.', options)
+  throw new ApiError('server', message ?? 'Server sedang bermasalah.', errorOptions)
+}
+
+export function getJson<T>(
+  path: string,
+  params: Record<string, string> | undefined,
+  signal: AbortSignal,
+): Promise<T> {
+  return requestJson<T>(path, { params, signal })
 }

@@ -64,3 +64,9 @@ export interface HistoryPage {
   page_size: number
   total: number
 }
+
+export interface AdminProfile {
+  id: number
+  email: string
+  display_name: string
+}

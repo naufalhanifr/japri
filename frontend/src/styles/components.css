@@ -662,3 +662,195 @@
   border: 0;
   cursor: pointer;
 }
+
+/* Mode Admin di header */
+.site-header__lead {
+  display: flex;
+  align-items: center;
+  gap: var(--jp-space-2);
+  min-width: 0;
+}
+
+.mode-chip {
+  padding: 0 var(--jp-space-2);
+  border-radius: var(--jp-radius-pill);
+  background: var(--jp-pending-bg);
+  color: var(--jp-pending-fg);
+  font-size: var(--jp-font-caption);
+  line-height: 20px;
+  font-weight: var(--jp-weight-bold);
+}
+
+.site-header__who {
+  padding: var(--jp-space-2) var(--jp-space-3);
+  color: var(--jp-ink2);
+  overflow-wrap: anywhere;
+}
+
+.site-header__logout,
+.site-header__login {
+  margin-top: var(--jp-space-2);
+  border-color: var(--jp-line-strong);
+  background: var(--jp-card);
+  color: var(--jp-ink);
+}
+
+.site-header__logout:hover:not(:disabled),
+.site-header__login:hover {
+  background: var(--jp-hover-row);
+}
+
+@media (min-width: 720px) {
+  .site-header__lead {
+    margin-right: auto;
+  }
+
+  .site-header__who {
+    display: flex;
+    align-items: center;
+    min-height: var(--jp-size-control);
+    padding: 0 var(--jp-space-3);
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .site-header__logout,
+  .site-header__login {
+    margin: 0 0 0 var(--jp-space-2);
+  }
+}
+
+/* Menu admin lebih panjang: tetap memakai tombol Menu sampai layar lebar */
+@media (min-width: 720px) and (max-width: 1023px) {
+  .site-header--admin .site-header__bar {
+    padding: 0 var(--jp-space-4);
+  }
+
+  .site-header--admin .site-header__menu-button {
+    display: inline-flex;
+  }
+
+  .site-header--admin .site-header__nav {
+    display: none;
+    position: absolute;
+    flex-direction: column;
+    gap: 0;
+    padding: var(--jp-space-2) var(--jp-space-4) var(--jp-space-4);
+    border-bottom: 1px solid var(--jp-line);
+  }
+
+  .site-header--admin .site-header__nav.is-open {
+    display: flex;
+  }
+
+  .site-header--admin .site-header__link {
+    min-height: var(--jp-size-control-mobile);
+  }
+
+  .site-header--admin .site-header__who {
+    display: block;
+    min-height: 0;
+    max-width: none;
+    padding: var(--jp-space-2) var(--jp-space-3);
+    white-space: normal;
+  }
+
+  .site-header--admin .site-header__logout {
+    margin: var(--jp-space-2) 0 0;
+  }
+}
+
+/* S4 Login admin */
+.page--auth {
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100dvh - var(--jp-size-header));
+}
+
+.auth-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--jp-space-5);
+  width: 100%;
+  max-width: 400px;
+  padding: var(--jp-space-5);
+  background: var(--jp-card);
+  border: 1px solid var(--jp-line);
+  border-radius: var(--jp-radius-card);
+}
+
+@media (min-width: 640px) {
+  .auth-card {
+    padding: var(--jp-space-8);
+  }
+}
+
+.auth-card__title {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: var(--jp-weight-bold);
+}
+
+.auth-card__lead {
+  margin-top: var(--jp-space-1);
+  color: var(--jp-ink2);
+}
+
+.auth-card__back {
+  align-self: center;
+}
+
+.auth-card .field__input {
+  font-size: 16px;
+}
+
+.btn--full {
+  width: 100%;
+}
+
+.form-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: var(--jp-font-caption);
+  line-height: var(--jp-font-line-caption);
+  font-weight: var(--jp-weight-medium);
+  color: var(--jp-danger);
+}
+
+.form-error .icon {
+  margin-top: 1px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: var(--jp-radius-pill);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation-duration: 2.4s; }
+}
+
+/* S12 Sesi berakhir */
+@media (min-width: 640px) {
+  .detail.session-dialog {
+    width: min(440px, calc(100vw - 2 * var(--jp-space-4)));
+  }
+}
+
+.session-dialog__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--jp-space-3);
+}

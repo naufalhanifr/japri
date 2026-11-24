@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 
 export type IconName =
   | 'running' | 'standby' | 'cuti' | 'scheduled' | 'done' | 'cancelled' | 'overdue'
-  | 'info' | 'calendar' | 'prev' | 'next' | 'menu' | 'close'
+  | 'info' | 'calendar' | 'prev' | 'next' | 'menu' | 'close' | 'lock' | 'logout' | 'offline'
 
 const SOLID = { fill: 'currentColor' }
 const LINE = { fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'butt' as const, strokeLinejoin: 'miter' as const }
@@ -48,6 +48,25 @@ const GLYPHS: Record<IconName, ReactNode> = {
   next: <path d="M6 3l5 5-5 5" {...LINE} strokeWidth={2.2} />,
   menu: <path d="M2 4h12M2 8h12M2 12h12" {...LINE} strokeWidth={2} />,
   close: <path d="M3.5 3.5l9 9M12.5 3.5l-9 9" {...LINE} strokeWidth={2} />,
+  lock: (
+    <>
+      <path d="M3 7.2h10v6.6H3z" {...LINE} strokeWidth={1.6} />
+      <path d="M5.2 7.2V5a2.8 2.8 0 0 1 5.6 0v2.2" {...LINE} strokeWidth={1.6} />
+    </>
+  ),
+  logout: (
+    <>
+      <path d="M6.5 2.5H2.5v11h4" {...LINE} strokeWidth={1.6} />
+      <path d="M6.5 8h7M10.8 5.2L13.6 8l-2.8 2.8" {...LINE} strokeWidth={1.6} />
+    </>
+  ),
+  offline: (
+    <>
+      <path d="M2 6.2a8.5 8.5 0 0 1 12 0M4.4 8.8a5.2 5.2 0 0 1 7.2 0" {...LINE} strokeWidth={1.6} />
+      <circle cx="8" cy="11.6" r="1" {...SOLID} />
+      <path d="M2.5 2.5l11 11" {...LINE} strokeWidth={1.8} />
+    </>
+  ),
 }
 
 export function Icon({ name, size = 16 }: { name: IconName; size?: number }) {

@@ -1,6 +1,6 @@
 # Japri frontend
 
-Frontend publik Japri. FE 1/6 berisi kerangka aplikasi, Dashboard publik (S1), rincian booking per driver (S2), dan halaman galat (S13). FE 2/6 menambah Riwayat publik (S3) dan satu pemilih tanggal kalender bersama untuk S1 dan S3. Login Admin dan layar admin menyusul di slice berikutnya.
+Frontend publik Japri. FE 1/6 berisi kerangka aplikasi, Dashboard publik (S1), rincian booking per driver (S2), dan halaman galat (S13). FE 2/6 menambah Riwayat publik (S3) dan satu pemilih tanggal kalender bersama untuk S1 dan S3. FE 3/6 menambah Login Admin (S4), Mode Admin di header, Keluar, dan dialog Sesi berakhir (S12). Layar Booking dan Kelola driver menyusul di slice berikutnya; menunya sudah ada dan menuju halaman placeholder.
 
 ## Stack dan alasan
 
@@ -23,7 +23,7 @@ npm install        # pasang dependensi
 npm run dev        # dev server di http://localhost:5173, /api diteruskan ke backend lokal
 npm run build      # tsc --noEmit lalu vite build, hasil di dist/
 npm run preview    # sajikan dist/ secara lokal
-npm test           # vitest run (86 tes)
+npm test           # vitest run (119 tes)
 npm run lint       # eslint .
 ```
 
@@ -52,11 +52,12 @@ Pesan galat dari nginx bisa diarahkan ke halaman S13: `/galat/429` (terlalu bany
 ## Struktur
 
 ```
-src/api/         klien fetch, tipe kontrak, ApiError (network/server/rate_limited/not_found/validation)
+src/api/         klien fetch, tipe kontrak, ApiError (network/server/rate_limited/not_found/validation/unauthenticated/csrf), admin.ts (klien admin bersama: cookie sesi, token CSRF, 401 ke S12)
+src/auth/        AuthProvider (status loading/anonymous/admin/expired) dan RequireAdmin (guard tampilan)
 src/lib/         tanggal WIB, kalender (grid bulan, navigasi keyboard), pemilihan tanggal/rentang, query riwayat, poller, timeline, format
 src/hooks/       useDashboard (polling + stale), useOpenBookings (S2), useHistory dan useDriverOptions (S3)
 src/components/  komponen dasar, DateRangePopover (kalender bersama), komponen S1/S2/S3
-src/pages/       Dashboard, Riwayat, halaman galat
+src/pages/       Dashboard, Riwayat, Masuk (S4), placeholder admin, halaman galat
 src/styles/      tokens.css, base.css, components.css, dashboard.css
 ```
 
@@ -73,6 +74,12 @@ src/styles/      tokens.css, base.css, components.css, dashboard.css
 - **Riwayat (S3)**: `GET /api/public/history`, 20 baris per halaman, terbaru di atas. Filter (driver, tanggal, status) disimpan di URL (`?driver=&from=&to=&status=&page=`), jadi halaman berikutnya dan tombol Back tetap membawa filter. Mengubah filter kembali ke halaman 1. Daftar driver dari `GET /api/public/drivers` termasuk driver nonaktif (diberi tanda "(nonaktif)").
 - **Rentang Riwayat**: maksimal 366 hari (`HISTORY_MAX_RANGE_DAYS`, sama dengan batas backend). Rentang dari URL yang tidak valid (lebih dari 366 hari atau akhir sebelum mulai) menampilkan pesan di filter dan tidak memanggil API. Pemilih sendiri tidak bisa menerapkan rentang tidak valid: tombol Terapkan nonaktif, data di bawahnya tidak berubah.
 - **Keadaan Riwayat**: memuat (skeleton), kosong ("Belum ada riwayat"), kosong karena filter (dengan "Hapus filter"), halaman di luar jangkauan, galat (404 driver tidak ditemukan, 429, umum, dengan "Coba lagi").
+- **Login Admin (S4)**: `/masuk`, `POST /api/admin/login`. Validasi di klien (email wajib dan berformat, password wajib) tanpa memanggil API. Email salah/password salah (401 `invalid_credentials`) selalu memakai satu pesan umum. 429 menampilkan lama tunggu dari `Retry-After` dan mengunci tombol sampai waktunya lewat. Galat server atau jaringan tidak mengosongkan email. Password selalu dikosongkan setelah gagal. Tombol dikunci selama permintaan berjalan.
+- **Mode Admin**: saat dibuka, `GET /api/admin/me` menentukan status. Jika admin: header menampilkan label Admin, nama, menu Booking dan Kelola driver, dan tombol Keluar. Jika bukan: tautan "Login Admin". Keluar memanggil `POST /api/admin/logout` lalu kembali ke Dashboard.
+- **Klien admin bersama** (`src/api/admin.ts`): semua permintaan admin lewat `adminRequest`. Cookie sesi `japri_session` (HttpOnly, dikelola browser) ikut terkirim, dan token CSRF dikirim sebagai `X-CSRF-Token` pada setiap POST/PATCH. 403 `csrf_invalid` menjadi galat `csrf`. Token CSRF dan identitas admin hanya ada di memori, tidak di localStorage, sessionStorage, atau URL.
+- **Sesi berakhir (S12)**: 401 dari endpoint admin saat admin sedang masuk membuka dialog "Sesi berakhir", lalu "Login ulang" membawa ke `/masuk` dengan pemberitahuan dan, setelah masuk, kembali ke halaman semula. 401 pada login, pada cek `/me` awal, dan pada logout tidak memicu S12. Isian formulir yang belum disimpan tidak dipulihkan (usulan desain, di luar lingkup FE 3/6).
+- **Guard route**: `RequireAdmin` hanya mengatur tampilan. Perlindungan sebenarnya di server, tiap route `/api/admin` wajib sesi.
+- **Header admin**: di bawah 1024px menu admin tetap berupa tombol Menu karena daftar tautan admin lebih panjang. Panjang sesi dan batas percobaan login adalah konfigurasi server, tidak ditampilkan di FE.
 - **Pemilih tanggal**: satu komponen `DateRangePopover` dipakai di Dashboard (batas 31 hari) dan Riwayat (batas 366 hari). Tab "Satu tanggal" dan "Rentang", grid bulan Senin sampai Minggu, ringkasan "24 Nov - 27 Nov 2026 (4 hari)", Batal dan Terapkan. Di bawah 640px tampil sebagai bottom sheet. Keyboard: panah, Home/End (awal/akhir pekan), PageUp/PageDown (bulan), Enter memilih, Esc menutup dan mengembalikan fokus ke tombol pemicu. Tiap tanggal punya label panjang untuk pembaca layar ("Selasa, 24 November 2026").
 - **Selisih dari desain S3**: desain memakai dua kolom teks "Dari tanggal" dan "Sampai tanggal". Implementasi memakai satu tombol "Tanggal (opsional)" yang membuka pemilih bersama, sesuai permintaan PO, ditambah tautan "Hapus tanggal".
 
@@ -100,10 +107,10 @@ Dev (tidak masuk ke bundle):
 
 ## Cakupan tes
 
-86 tes di 12 berkas: tanggal dan rentang (`lib/date`, `lib/selection`), kalender (`lib/calendar`: grid bulan, gerak fokus, batas bulan), query riwayat (`lib/historyQuery`: parse, serialisasi, rentang tidak valid), polling (`lib/poller`), klien API (`api/client`), perhitungan timeline, `useDashboard`, `DatePicker` (klik tanggal, rentang valid, akhir sebelum mulai, lebih dari 31 hari, Esc, keyboard panah/Home/End/PageDown, label dan `aria-selected`), `DriverDetailDialog`, halaman Dashboard, dan halaman Riwayat (14 tes: sukses, filter driver/status/tanggal digabung, halaman berikutnya membawa filter, memuat, kosong, kosong karena filter dan hapus filter, rentang tidak valid tanpa panggilan API, rentang lebih dari 366 hari, galat 404/429/umum dan coba lagi, driver nonaktif di daftar).
+119 tes di 15 berkas: tanggal dan rentang (`lib/date`, `lib/selection`), kalender (`lib/calendar`: grid bulan, gerak fokus, batas bulan), query riwayat (`lib/historyQuery`: parse, serialisasi, rentang tidak valid), polling (`lib/poller`), klien API (`api/client`), perhitungan timeline, `useDashboard`, `DatePicker` (klik tanggal, rentang valid, akhir sebelum mulai, lebih dari 31 hari, Esc, keyboard panah/Home/End/PageDown, label dan `aria-selected`), `DriverDetailDialog`, halaman Dashboard, dan halaman Riwayat (14 tes: sukses, filter driver/status/tanggal digabung, halaman berikutnya membawa filter, memuat, kosong, kosong karena filter dan hapus filter, rentang tidak valid tanpa panggilan API, rentang lebih dari 366 hari, galat 404/429/umum dan coba lagi, driver nonaktif di daftar), klien admin (`api/admin`: CSRF pada POST/PATCH dan tidak pada GET, token dari `/me`, 401 memicu S12 kecuali login/`/me` awal/logout, 403 csrf, 429 dengan `Retry-After`), validasi login (`lib/loginForm`), dan alur Login/Keluar/S12 (`pages/Masuk.test`: sukses, validasi tanpa panggilan API, 401 umum, 429 dan buka kunci, 5xx dan jaringan menjaga email, tombol terkunci saat memuat, password tidak di storage/URL/konsol, kembali ke halaman asal, Keluar dari halaman admin, S12 dari 401 lalu login ulang).
 
 ## Batasan saat ini
 
 - Pencarian teks bebas, ekspor Excel, dan filter driver di Dashboard di luar lingkup MVP.
-- Belum ada tautan Login Admin, menyusul bersama layar admin.
+- Booking dan Kelola driver masih halaman placeholder. Lupa password, akun staf, dan beberapa peran di luar lingkup.
 - Tes berjalan di jsdom. Layout, kontras, dan fokus diperiksa lewat browser headless (Chromium via Playwright) pada 375, 768, dan 1280 px terhadap backend sungguhan dengan data sintetis. Pemeriksaan itu skrip sekali pakai di luar repo, bukan tes otomatis.
