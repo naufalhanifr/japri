@@ -9,6 +9,7 @@ from .config import Settings
 from .db import connect
 from .errors import install_error_handlers
 from .notifier import OutboxNotifier
+from .public import TTLCache
 from .routers.admin import admin_router, login_router
 from .routers.public import public_router
 from .routers.telegram import webhook_router
@@ -57,6 +58,7 @@ def create_app(settings=None, clock=utcnow, notifier=None, telegram=None):
     app.state.clock = clock
     app.state.notifier = notifier or OutboxNotifier(settings)
     app.state.telegram = telegram
+    app.state.public_cache = TTLCache(settings.public_cache_seconds)
     install_error_handlers(app)
     app.include_router(login_router)
     app.include_router(admin_router)

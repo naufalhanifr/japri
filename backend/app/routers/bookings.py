@@ -79,8 +79,11 @@ def list_bookings(
     now=Depends(get_now),
 ):
     if date_ is not None:
+        bookings.check_date(date_, "date")
         day_from = day_to = date_
     elif from_ is not None and to is not None:
+        bookings.check_date(from_, "from")
+        bookings.check_date(to, "to")
         day_from, day_to = from_, to
     elif from_ is None and to is None:
         day_from = day_to = wib_date(now)

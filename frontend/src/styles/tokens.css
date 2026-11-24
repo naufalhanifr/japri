@@ -1,0 +1,97 @@
+/* Token desain JAPRI MVP. Sumber: variabel FigCraft koleksi "JAPRI MVP Warna" dan "JAPRI MVP Ukuran" di Design.figcraft. Jangan tulis nilai mentah di komponen. */
+:root {
+  --jp-page: #f4f6fa;
+  --jp-card: #ffffff;
+  --jp-ink: #101828;
+  --jp-ink2: #475467;
+  --jp-ink3: #5b6678;
+  --jp-brand: #1d4ed8;
+  --jp-brand-hover: #1e40af;
+  --jp-brand-tint: #eaf0fe;
+  --jp-danger: #b42318;
+  --jp-danger-tint: #fee2e2;
+  --jp-line: #e4e7ec;
+  --jp-line-strong: #8a94a6;
+  --jp-white: #ffffff;
+  --jp-overlay: #101828;
+  --jp-running-bg: #1d4ed8;
+  --jp-running-fg: #ffffff;
+  --jp-standby-bg: #d1fae5;
+  --jp-standby-fg: #065f46;
+  --jp-standby-dot: #047857;
+  --jp-cuti-bg: #ede9fe;
+  --jp-cuti-fg: #5b21b6;
+  --jp-pending-bg: #fef3c7;
+  --jp-pending-fg: #7c2d12;
+  --jp-done-bg: #e0e7f5;
+  --jp-done-fg: #1e3a5f;
+  --jp-cancel-bg: #eef0f4;
+  --jp-cancel-fg: #475467;
+  --jp-overdue-bg: #ffedd5;
+  --jp-overdue-fg: #9a3412;
+  --jp-sent-bg: #dcfce7;
+  --jp-sent-fg: #166534;
+  --jp-fail-bg: #fee2e2;
+  --jp-fail-fg: #991b1b;
+  --jp-wait-bg: #e8edf5;
+  --jp-wait-fg: #344054;
+  --jp-warn-bg: #fef3c7;
+  --jp-warn-fg: #78350f;
+  --jp-info-bg: #eaf0fe;
+  --jp-info-fg: #1e3a8a;
+  --jp-tg-bg: #e6ebf2;
+  --jp-tg-bubble: #ffffff;
+  --jp-tg-out: #e3f2ff;
+  --jp-skeleton: #e4e7ec;
+  --jp-now: #b42318;
+  --jp-disabled-fg: #667085;
+  --jp-disabled-bg: #e4e7ec;
+  --jp-field-off: #f2f4f7;
+  --jp-info-line: #bfd0fa;
+  --jp-warn-line: #f0d48a;
+  --jp-fail-line: #f2b8b5;
+  --jp-sent-line: #a7e3b8;
+  --jp-brand-ring: #1d4ed8;
+  --jp-scrim: #101828;
+  --jp-tg-quote: #c9e2f7;
+  --jp-overdue-row: #fff7ed;
+  --jp-hover-row: #f9fafb;
+  --jp-cal-range: #dce6fd;
+  --jp-tg-head: #ffffff;
+
+  --jp-space-1: 4px;
+  --jp-space-2: 8px;
+  --jp-space-3: 12px;
+  --jp-space-4: 16px;
+  --jp-space-5: 20px;
+  --jp-space-6: 24px;
+  --jp-space-8: 32px;
+  --jp-space-10: 40px;
+  --jp-radius-small: 6px;
+  --jp-radius-control: 8px;
+  --jp-radius-card: 12px;
+  --jp-radius-pill: 999px;
+  --jp-size-control: 40px;
+  --jp-size-control-mobile: 44px;
+  --jp-size-header: 64px;
+  --jp-size-focus-ring: 3px;
+  --jp-size-focus-offset: 2px;
+  --jp-font-body: 14px;
+  --jp-font-title: 24px;
+  --jp-font-summary: 32px;
+  --jp-font-caption: 12px;
+  --jp-font-line-body: 20px;
+  --jp-font-line-title: 32px;
+  --jp-font-line-summary: 40px;
+  --jp-font-line-caption: 16px;
+  /* bp-mobile-max: 639px (media query tidak bisa memakai var) */
+  /* bp-tablet-min: 640px (media query tidak bisa memakai var) */
+  /* bp-desktop-min: 1024px (media query tidak bisa memakai var) */
+  /* bp-wide-min: 1200px (media query tidak bisa memakai var) */
+  /* bp-menu-collapse: 720px (media query tidak bisa memakai var) */
+
+  --jp-font-family: 'Plus Jakarta Sans Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --jp-weight-regular: 400;
+  --jp-weight-medium: 600;
+  --jp-weight-bold: 700;
+}

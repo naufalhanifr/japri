@@ -42,6 +42,16 @@ def client_ip(request: Request, settings):
     return peer
 
 
+def get_public_conn(request: Request):
+    """Koneksi khusus endpoint publik: menolak semua tulis di tingkat database (FR-6)."""
+    conn = connect(request.app.state.settings.db_path)
+    conn.execute("PRAGMA query_only=ON")
+    try:
+        yield conn
+    finally:
+        conn.close()
+
+
 def require_admin(
     request: Request,
     conn=Depends(get_conn),

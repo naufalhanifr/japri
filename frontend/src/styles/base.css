@@ -1,0 +1,98 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--jp-page);
+  color: var(--jp-ink);
+  font-family: var(--jp-font-family);
+  font-size: var(--jp-font-body);
+  line-height: var(--jp-font-line-body);
+  font-weight: var(--jp-weight-regular);
+  word-spacing: 0.1em;
+}
+
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+
+h1, h2, h3, p, dl, dd, ul, ol, fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button, input {
+  font: inherit;
+  word-spacing: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: var(--jp-size-focus-ring) solid var(--jp-brand-ring);
+  outline-offset: var(--jp-size-focus-offset);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--jp-space-4);
+  top: -80px;
+  z-index: 100;
+  padding: var(--jp-space-2) var(--jp-space-4);
+  background: var(--jp-brand);
+  color: var(--jp-white);
+  border-radius: var(--jp-radius-control);
+  font-weight: var(--jp-weight-medium);
+}
+
+.skip-link:focus {
+  top: var(--jp-space-2);
+}
+
+.icon {
+  flex: none;
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

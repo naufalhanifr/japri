@@ -57,6 +57,11 @@ class Settings:
     cookie_secure: bool = True
     trusted_proxies: tuple = ("127.0.0.1", "::1")
     enable_docs: bool = False
+    # SA 5.4, 4.4, 7: nilai awal Proposed / Needs confirmation. Batas laju per IP ada di nginx (SA 4.4, D10).
+    public_cache_seconds: int = 5
+    public_max_page_size: int = 100
+    public_max_range_days: int = 366
+    public_dashboard_max_range_days: int = 31
 
     @classmethod
     def from_env(cls, env=None):
@@ -80,4 +85,10 @@ class Settings:
             if proxies is not None
             else d.trusted_proxies,
             enable_docs=_bool(env, "ENABLE_DOCS", d.enable_docs),
+            public_cache_seconds=_int(env, "PUBLIC_CACHE_SECONDS", d.public_cache_seconds, minimum=0),
+            public_max_page_size=_int(env, "PUBLIC_MAX_PAGE_SIZE", d.public_max_page_size),
+            public_max_range_days=_int(env, "PUBLIC_MAX_RANGE_DAYS", d.public_max_range_days),
+            public_dashboard_max_range_days=_int(
+                env, "PUBLIC_DASHBOARD_MAX_RANGE_DAYS", d.public_dashboard_max_range_days
+            ),
         )
