@@ -151,14 +151,55 @@ def test_overlap_counts_active_only_and_ignores_touching(session, conn, driver, 
     assert client.get("/api/admin/bookings/overlap-check", params={**q, "end_time": "13:00"}).status_code == 422
 
 
-def test_warnings_for_leave_and_linked(session, conn, driver, division_id):
-    client, csrf = session
-    client.patch(f"/api/admin/drivers/{driver['id']}", json={"is_on_leave": True}, headers=hdr(csrf))
-    assert make_booking(session, driver["id"], division_id)["warnings"] == ["driver_on_leave", "driver_not_linked"]
+def test_warning_not_linked_only_after_link_removed(session, conn, driver, division_id):
+    assert make_booking(session, driver["id"], division_id)["warnings"] == ["driver_not_linked"]
     conn.execute(
         "INSERT INTO driver_telegram_link (driver_id, telegram_chat_id, telegram_user_id, telegram_name, linked_at) "
         "VALUES (?, 5, 5, 'B', 'x')", (driver["id"],))
-    assert make_booking(session, driver["id"], division_id)["warnings"] == ["driver_on_leave"]
+    assert make_booking(session, driver["id"], division_id)["warnings"] == []
+
+
+def test_create_for_driver_on_leave_rejected(session, conn, driver, division_id, notifier):
+    client, csrf = session
+    client.patch(f"/api/admin/drivers/{driver['id']}", json={"is_on_leave": True}, headers=hdr(csrf))
+    audits = len(audit_rows(conn))
+    r = post(session, booking_body(driver["id"], division_id))
+    assert error(r) == (422, "driver_on_leave")
+    assert r.json()["error"]["message"] == "Driver sedang Cuti dan tidak bisa dibooking."
+    assert r.json()["error"]["details"] == [{"field": "driver_id", "reason": "driver_on_leave"}]
+    assert conn.execute("SELECT COUNT(*) FROM booking").fetchone()[0] == 0
+    assert len(audit_rows(conn)) == audits and notifier.calls == []
+
+
+def test_update_to_driver_on_leave_rejected_standby_and_running_allowed(session, conn, driver, division_id, notifier):
+    client, csrf = session
+    other = make_driver(session, name="Cuti", vehicle_plate="B 2 A")
+    running = make_driver(session, name="Jalan", vehicle_plate="B 3 A")
+    make_booking(session, running["id"], division_id, **RUNNING)
+    b = make_booking(session, driver["id"], division_id)["booking"]
+    client.patch(f"/api/admin/drivers/{other['id']}", json={"is_on_leave": True}, headers=hdr(csrf))
+    notifier.calls.clear()
+    audits = len(audit_rows(conn))
+    r = client.patch(f"/api/admin/bookings/{b['id']}", json={"driver_id": other["id"]}, headers=hdr(csrf))
+    assert error(r) == (422, "driver_on_leave")
+    assert client.get(f"/api/admin/bookings/{b['id']}").json()["driver"]["id"] == driver["id"]
+    assert len(audit_rows(conn)) == audits and notifier.calls == []
+    assert client.patch(f"/api/admin/bookings/{b['id']}", json={"driver_id": running["id"]}, headers=hdr(csrf)).status_code == 200
+
+
+def test_driver_back_from_leave_bookable_again(session, driver, division_id):
+    client, csrf = session
+    client.patch(f"/api/admin/drivers/{driver['id']}", json={"is_on_leave": True}, headers=hdr(csrf))
+    client.patch(f"/api/admin/drivers/{driver['id']}", json={"is_on_leave": False}, headers=hdr(csrf))
+    assert post(session, booking_body(driver["id"], division_id)).status_code == 201
+
+
+def test_edit_other_fields_of_existing_booking_allowed_after_driver_goes_on_leave(session, driver, division_id):
+    client, csrf = session
+    b = make_booking(session, driver["id"], division_id)["booking"]
+    client.patch(f"/api/admin/drivers/{driver['id']}", json={"is_on_leave": True}, headers=hdr(csrf))
+    r = client.patch(f"/api/admin/bookings/{b['id']}", json={"destination": "Bandara"}, headers=hdr(csrf))
+    assert r.status_code == 200 and r.json()["booking"]["destination"] == "Bandara"
 
 
 def test_multi_day_is_one_range_shown_each_day(session, driver, division_id):

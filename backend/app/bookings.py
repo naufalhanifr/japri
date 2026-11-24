@@ -122,16 +122,14 @@ def _require_bookable_driver(conn, driver_id):
         raise AppError(404, "driver_not_found", "Driver tidak ditemukan.")
     if not row["is_active"]:
         raise _bad_request("driver_inactive", "Driver sudah dinonaktifkan dan tidak bisa dibooking.", "driver_id")
-    return row
+    if row["is_on_leave"]:
+        raise _bad_request("driver_on_leave", "Driver sedang Cuti dan tidak bisa dibooking.", "driver_id")
 
 
-def _driver_warnings(conn, driver_id, driver):
-    warnings = []
-    if driver["is_on_leave"]:
-        warnings.append("driver_on_leave")
+def _driver_warnings(conn, driver_id):
     if conn.execute("SELECT 1 FROM driver_telegram_link WHERE driver_id = ?", (driver_id,)).fetchone() is None:
-        warnings.append("driver_not_linked")
-    return warnings
+        return ["driver_not_linked"]
+    return []
 
 
 def overlapping(conn, driver_id, start_at, end_at, exclude_id=None):
@@ -194,7 +192,7 @@ def create(conn, actor, now, notifier, data, *, status="active", source="web"):
     start_at, end_at = span(data["start_date"], data["start_time"], data["end_date"], data["end_time"])
     _check_not_past(start_at, now)
     with transaction(conn):
-        driver = _require_bookable_driver(conn, data["driver_id"])
+        _require_bookable_driver(conn, data["driver_id"])
         divisions.require_active(conn, data["division_id"])
         stamp = to_db(now)
         cur = conn.execute(
@@ -216,7 +214,7 @@ def create(conn, actor, now, notifier, data, *, status="active", source="web"):
         telegram = notifier.enqueue(
             conn, kind="booking_created", booking_id=booking_id, driver_id=data["driver_id"], now=now
         )
-        warnings = _driver_warnings(conn, data["driver_id"], driver)
+        warnings = _driver_warnings(conn, data["driver_id"])
         overlap_count = len(overlapping(conn, data["driver_id"], start_at, end_at, booking_id))
         row = _get(conn, booking_id)
     return {"booking": view(row, now), "overlap_count": overlap_count, "warnings": warnings, "telegram": telegram}
@@ -245,8 +243,8 @@ def update(conn, actor, now, notifier, booking_id, changes):
             if after["division_id"] != before["division_id"]:
                 divisions.require_active(conn, after["division_id"])
             if after["driver_id"] != before["driver_id"]:
-                driver = _require_bookable_driver(conn, after["driver_id"])
-                warnings = _driver_warnings(conn, after["driver_id"], driver)
+                _require_bookable_driver(conn, after["driver_id"])
+                warnings = _driver_warnings(conn, after["driver_id"])
             if wib_date(from_db(after["start_at"])) != wib_date(from_db(before["start_at"])):
                 _check_not_past(after["start_at"], now)
             conn.execute(
