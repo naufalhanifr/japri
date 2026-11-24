@@ -1,0 +1,133 @@
+/* Diturunkan dari variables di Design.figcraft (koleksi Primitif, Semantik, Ukuran). Jangan diubah manual: ubah di file desain lalu ekspor ulang. */
+/* Primitif · Nilai */
+:root {
+  --white: #FFFFFF;
+  --gray-50: #F9FAFB;
+  --gray-100: #F3F4F6;
+  --gray-200: #E5E7EB;
+  --gray-300: #D1D5DB;
+  --gray-400: #9CA3AF;
+  --gray-500: #6B7280;
+  --gray-600: #4B5563;
+  --gray-700: #374151;
+  --gray-800: #1F2937;
+  --gray-900: #111827;
+  --neutral-800: #262C2A;
+  --neutral-900: #171C1A;
+  --neutral-950: #0F1412;
+  --green-50: #F0FDF4;
+  --green-200: #BBF7D0;
+  --green-300: #86EFAC;
+  --green-400: #4ADE80;
+  --green-500: #22C55E;
+  --green-700: #15803D;
+  --green-800: #166534;
+  --green-900: #14532D;
+  --green-950: #052E16;
+  --blue-50: #EFF6FF;
+  --blue-300: #93C5FD;
+  --blue-700: #1D4ED8;
+  --blue-950: #172554;
+  --amber-50: #FFFBEB;
+  --amber-300: #FCD34D;
+  --amber-800: #92400E;
+  --amber-950: #451A03;
+  --red-50: #FEF2F2;
+  --red-200: #FECACA;
+  --red-300: #FCA5A5;
+  --red-400: #F87171;
+  --red-700: #B91C1C;
+  --red-800: #991B1B;
+  --red-900: #7F1D1D;
+  --red-950: #450A0A;
+}
+/* Semantik · Terang */
+:root {
+  --color-surface-page: var(--white);
+  --color-surface-raised: var(--white);
+  --color-surface-sunken: var(--gray-100);
+  --color-text-primary: var(--gray-900);
+  --color-text-secondary: var(--gray-600);
+  --color-text-link: var(--green-700);
+  --color-text-link-hover: var(--green-900);
+  --color-border-subtle: var(--gray-200);
+  --color-border-strong: var(--gray-500);
+  --color-action-primary-bg: var(--green-700);
+  --color-action-primary-bg-hover: var(--green-800);
+  --color-action-primary-bg-pressed: var(--green-900);
+  --color-action-primary-fg: var(--white);
+  --color-action-danger-bg: var(--red-700);
+  --color-action-danger-bg-hover: var(--red-800);
+  --color-action-danger-bg-pressed: var(--red-900);
+  --color-action-danger-fg: var(--white);
+  --color-action-disabled-bg: var(--gray-100);
+  --color-action-disabled-fg: var(--gray-500);
+  --color-focus-ring: var(--green-900);
+  --color-status-positif-bg: var(--green-50);
+  --color-status-positif-fg: var(--green-800);
+  --color-status-info-bg: var(--blue-50);
+  --color-status-info-fg: var(--blue-700);
+  --color-status-netral-bg: var(--gray-100);
+  --color-status-netral-fg: var(--gray-700);
+  --color-status-peringatan-bg: var(--amber-50);
+  --color-status-peringatan-fg: var(--amber-800);
+  --color-status-bahaya-bg: var(--red-50);
+  --color-status-bahaya-fg: var(--red-700);
+  --color-surface-overlay: rgba(17, 24, 39, 0.50);
+}
+/* Semantik · Gelap */
+[data-semantik="Gelap"] {
+  --color-surface-page: var(--neutral-950);
+  --color-surface-raised: var(--neutral-900);
+  --color-surface-sunken: var(--neutral-900);
+  --color-text-primary: var(--gray-50);
+  --color-text-secondary: var(--gray-400);
+  --color-text-link: var(--green-400);
+  --color-text-link-hover: var(--green-300);
+  --color-border-subtle: var(--neutral-800);
+  --color-border-strong: var(--gray-500);
+  --color-action-primary-bg: var(--green-400);
+  --color-action-primary-bg-hover: var(--green-300);
+  --color-action-primary-bg-pressed: var(--green-500);
+  --color-action-primary-fg: var(--green-950);
+  --color-action-danger-bg: var(--red-300);
+  --color-action-danger-bg-hover: var(--red-200);
+  --color-action-danger-bg-pressed: var(--red-400);
+  --color-action-danger-fg: var(--red-950);
+  --color-action-disabled-bg: var(--gray-800);
+  --color-action-disabled-fg: var(--gray-400);
+  --color-focus-ring: var(--green-200);
+  --color-status-positif-bg: var(--green-950);
+  --color-status-positif-fg: var(--green-300);
+  --color-status-info-bg: var(--blue-950);
+  --color-status-info-fg: var(--blue-300);
+  --color-status-netral-bg: var(--neutral-800);
+  --color-status-netral-fg: var(--gray-300);
+  --color-status-peringatan-bg: var(--amber-950);
+  --color-status-peringatan-fg: var(--amber-300);
+  --color-status-bahaya-bg: var(--red-950);
+  --color-status-bahaya-fg: var(--red-300);
+  --color-surface-overlay: rgba(15, 20, 18, 0.70);
+}
+/* Ukuran · Nilai */
+:root {
+  --radius-control: 8px;
+  --radius-surface: 12px;
+  --radius-badge: 6px;
+  --radius-pill: 999px;
+  --size-control-height: 44px;
+  --size-icon: 20px;
+  --size-panel-width: 480px;
+  --size-dialog-width: 440px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --font-size-small: 14px;
+  --font-size-body: 16px;
+  --font-size-title: 20px;
+  --font-size-heading: 24px;
+}
