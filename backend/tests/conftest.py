@@ -1,3 +1,4 @@
+from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 
 import pytest
@@ -52,7 +53,7 @@ class RecordingNotifier:
     def __init__(self):
         self.calls = []
 
-    def enqueue(self, conn, *, kind, booking_id, driver_id, now):
+    def enqueue(self, conn, *, kind, booking_id, driver_id, now, changed=None, before=None):
         assert conn.in_transaction
         self.calls.append((kind, booking_id, driver_id))
 
@@ -69,6 +70,34 @@ def notifier():
 @pytest.fixture
 def app(settings, conn, clock, notifier):
     return create_app(settings, clock, notifier)
+
+
+class FakeTelegram:
+    """Pengganti TelegramClient: mencatat pesan keluar, dan bisa dipaksa gagal per chat."""
+
+    def __init__(self):
+        self.sent = []
+        self.answered = []
+        self.fail = {}
+        self._next_id = 1000
+
+    def send_message(self, chat_id, text, reply_markup=None):
+        if chat_id in self.fail:
+            raise self.fail[chat_id]
+        self._next_id += 1
+        self.sent.append({"chat_id": chat_id, "text": text, "markup": reply_markup, "message_id": self._next_id})
+        return self._next_id
+
+    def answer_callback(self, callback_query_id):
+        self.answered.append(callback_query_id)
+
+    def to(self, chat_id):
+        return [m for m in self.sent if m["chat_id"] == chat_id]
+
+
+@pytest.fixture
+def tg():
+    return FakeTelegram()
 
 
 @pytest.fixture
@@ -126,3 +155,80 @@ def make_booking(session, driver_id, division_id, **kw):
     r = client.post("/api/admin/bookings", json=booking_body(driver_id, division_id, **kw), headers=hdr(csrf))
     assert r.status_code == 201, r.text
     return r.json()
+
+
+BOT_TOKEN = "123456:TEST-bot-token-value"
+WEBHOOK_SECRET = "webhook-secret-uji"
+GROUP_ID = -1001234567890
+BOT_USERNAME = "japri_test_bot"
+ADMIN_TG = 9001
+DRIVER_CHAT = 5001
+
+
+@pytest.fixture
+def tsettings(settings):
+    return replace(
+        settings, telegram_bot_token=BOT_TOKEN, telegram_webhook_secret=WEBHOOK_SECRET,
+        telegram_bot_username=BOT_USERNAME, telegram_group_chat_id=GROUP_ID,
+    )
+
+
+@pytest.fixture
+def tapp(tsettings, conn, clock, tg):
+    """Aplikasi dengan OutboxNotifier asli dan Telegram palsu."""
+    return create_app(tsettings, clock, None, tg)
+
+
+@pytest.fixture
+def tclient(tapp):
+    return TestClient(tapp, base_url="https://testserver")
+
+
+@pytest.fixture
+def tsession(tclient, admin_id):
+    r = login(tclient)
+    assert r.status_code == 200
+    return tclient, r.json()["csrf_token"]
+
+
+def link_driver(conn, driver_id, chat_id=DRIVER_CHAT, user_id=None):
+    user_id = user_id or chat_id
+    conn.execute(
+        "INSERT INTO driver_telegram_link (driver_id, telegram_chat_id, telegram_user_id, telegram_name, linked_at) "
+        "VALUES (?, ?, ?, 'Budi', '2026-11-22T00:00:00Z')",
+        (driver_id, chat_id, user_id),
+    )
+
+
+def flush(app, conn=None):
+    """Jalankan satu putaran worker secara sinkron, seperti yang dilakukan tugas latar."""
+    from app import outbox
+
+    return outbox.run_once(app.state.settings.db_path, app.state.telegram, app.state.clock)
+
+
+_update_ids = iter(range(1, 10**9))
+
+
+def message_update(text, user=DRIVER_CHAT, chat=None, chat_type="private", reply_to=None, update_id=None):
+    msg = {"message_id": 1, "from": {"id": user, "first_name": "Budi"}, "chat": {"id": chat or user, "type": chat_type}, "text": text}
+    if reply_to is not None:
+        msg["reply_to_message"] = {"message_id": reply_to}
+    return {"update_id": update_id or next(_update_ids), "message": msg}
+
+
+def callback_update(data, user=DRIVER_CHAT, chat=None):
+    return {
+        "update_id": next(_update_ids),
+        "callback_query": {"id": f"cb{next(_update_ids)}", "from": {"id": user}, "data": data,
+                           "message": {"message_id": 7, "chat": {"id": chat or user, "type": "private"}}},
+    }
+
+
+def group_update(text, user=ADMIN_TG, reply_to=None):
+    return message_update(text, user=user, chat=GROUP_ID, chat_type="supergroup", reply_to=reply_to)
+
+
+def post_update(client, update, secret=WEBHOOK_SECRET):
+    headers = {"X-Telegram-Bot-Api-Secret-Token": secret} if secret is not None else {}
+    return client.post("/api/telegram/webhook", json=update, headers=headers)

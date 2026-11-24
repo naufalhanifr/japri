@@ -7,6 +7,7 @@ from .timeutil import to_db, to_wib_iso
 
 _PHONE = re.compile(r"^\+?[0-9]{8,15}$")
 _ALIAS = re.compile(r"^[a-z0-9_]{1,32}$")
+RESERVED_ALIASES = ("oke", "selesai", "start", "help")
 _AUDIT_FIELDS = ("name", "phone", "vehicle_type", "vehicle_plate", "is_active", "is_on_leave", "command_alias")
 
 _SELECT = (
@@ -31,11 +32,13 @@ def _clean_alias(value):
     alias = value.strip().lower()
     if not _ALIAS.match(alias):
         raise _invalid("command_alias", "alias_invalid", "Kode perintah hanya huruf kecil, angka, dan garis bawah (maksimal 32).")
+    if alias in RESERVED_ALIASES:
+        raise _invalid("command_alias", "alias_invalid", "Kode perintah ini dipakai bot: " + ", ".join(RESERVED_ALIASES) + ".")
     return alias
 
 
 def _alias_taken(conn, alias, exclude_id=None):
-    return conn.execute(
+    return alias in RESERVED_ALIASES or conn.execute(
         "SELECT 1 FROM driver WHERE command_alias = ? AND id IS NOT ?", (alias, exclude_id)
     ).fetchone() is not None
 

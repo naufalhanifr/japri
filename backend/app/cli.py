@@ -7,6 +7,7 @@ from pathlib import Path
 from . import auth, divisions, migrate
 from .config import Settings
 from .db import connect
+from .telegram import TelegramClient, TelegramError
 from .timeutil import utcnow
 
 
@@ -22,6 +23,26 @@ def _read_password(args):
 def _connect(settings):
     Path(settings.db_path).parent.mkdir(parents=True, exist_ok=True)
     return connect(settings.db_path)
+
+
+def _set_webhook(settings, url, transport=None):
+    if not url.startswith("https://"):
+        print("Gagal: URL webhook harus HTTPS.", file=sys.stderr)
+        return 1
+    if not settings.telegram_bot_token or not settings.telegram_webhook_secret:
+        print("Gagal: JAPRI_TELEGRAM_BOT_TOKEN dan JAPRI_TELEGRAM_WEBHOOK_SECRET belum diisi.", file=sys.stderr)
+        return 1
+    client = TelegramClient(settings.telegram_bot_token, settings.telegram_api_base, transport=transport)
+    try:
+        client.set_webhook(url, settings.telegram_webhook_secret)
+        client.set_commands()
+    except TelegramError as exc:
+        print(f"Gagal: Telegram menolak ({exc.code}).", file=sys.stderr)
+        return 1
+    finally:
+        client.close()
+    print("Webhook dan daftar perintah bot terdaftar.")
+    return 0
 
 
 def main(argv=None, env=None):
@@ -51,8 +72,17 @@ def main(argv=None, env=None):
     p.add_argument("--name", required=True)
     p.add_argument("--active", choices=("true", "false"), required=True)
 
+    p = sub.add_parser("set-admin-telegram", help="daftarkan akun Telegram admin untuk perintah booking di grup")
+    p.add_argument("--email", required=True)
+    p.add_argument("--telegram-user-id", type=int, required=True)
+
+    p = sub.add_parser("set-webhook", help="daftarkan URL webhook dan daftar perintah bot di Telegram")
+    p.add_argument("--url", required=True, help="alamat HTTPS publik, mis. https://domain/api/telegram/webhook")
+
     args = parser.parse_args(argv)
     settings = Settings.from_env(env if env is not None else os.environ)
+    if args.command == "set-webhook":
+        return _set_webhook(settings, args.url)
     conn = _connect(settings)
     try:
         if args.command == "migrate":
@@ -64,6 +94,9 @@ def main(argv=None, env=None):
         elif args.command == "add-division":
             divisions.add(conn, args.name, args.sort_order)
             print("Divisi ditambahkan.")
+        elif args.command == "set-admin-telegram":
+            auth.set_telegram_user(conn, args.email, args.telegram_user_id)
+            print("Akun Telegram admin terdaftar.")
         elif args.command == "set-division-active":
             divisions.set_active(conn, args.name, args.active == "true")
             print("Status Divisi diubah.")
