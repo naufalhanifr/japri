@@ -19,30 +19,30 @@ def test_connection_pragmas(conn):
 
 def test_migrations_discovered_with_down():
     found = migrate.discover()
-    assert [m.version for m in found] == [1, 2, 3, 4]
+    assert [m.version for m in found] == [1, 2, 3, 4, 5]
     assert all(m.up_sql.strip() and m.down_sql.strip() for m in found)
 
 
 def test_up_creates_tables_and_is_idempotent(conn):
     names = {r["name"] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
-    assert {"admin", "session", "login_attempt", "audit_log", "driver", "division", "driver_telegram_link", "booking", "schema_migration"} <= names
+    assert {"admin", "session", "login_attempt", "audit_log", "driver", "division", "driver_telegram_link", "booking", "telegram_link_token", "telegram_message", "telegram_update", "schema_migration"} <= names
     assert migrate.up(conn) == []
-    assert migrate.current_version(conn) == 4
+    assert migrate.current_version(conn) == 5
 
 
 def test_up_down_up_gives_identical_schema(conn):
     first = schema(conn)
-    assert migrate.down(conn, steps=4) == [4, 3, 2, 1]
+    assert migrate.down(conn, steps=5) == [5, 4, 3, 2, 1]
     assert [t for t in schema(conn) if t[1] != "schema_migration"] == []
     migrate.up(conn)
     assert schema(conn) == first
 
 
 def test_down_one_step_only_removes_latest(conn):
-    assert migrate.down(conn) == [4]
+    assert migrate.down(conn) == [5]
     names = {r["name"] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
-    assert "booking" not in names and "driver" in names
-    assert migrate.current_version(conn) == 3
+    assert not names & {"telegram_message", "telegram_link_token", "telegram_update"} and "booking" in names
+    assert migrate.current_version(conn) == 4
 
 
 def test_foreign_keys_enforced(conn):
@@ -55,14 +55,14 @@ def test_foreign_keys_enforced(conn):
 
 def test_failed_migration_rolls_back(tmp_path):
     shutil.copytree(migrate.MIGRATIONS_DIR, tmp_path / "m")
-    (tmp_path / "m" / "0005_bad.up.sql").write_text("CREATE TABLE ok_table (id INTEGER);\nCREATE TABLE ok_table (id INTEGER);")
-    (tmp_path / "m" / "0005_bad.down.sql").write_text("DROP TABLE ok_table;")
+    (tmp_path / "m" / "0006_bad.up.sql").write_text("CREATE TABLE ok_table (id INTEGER);\nCREATE TABLE ok_table (id INTEGER);")
+    (tmp_path / "m" / "0006_bad.down.sql").write_text("DROP TABLE ok_table;")
     c = connect(str(tmp_path / "x.db"))
     with pytest.raises(Exception, match="already exists"):
         migrate.up(c, directory=tmp_path / "m")
     names = {r["name"] for r in c.execute("SELECT name FROM sqlite_master WHERE type='table'")}
     assert "ok_table" not in names and "admin" in names
-    assert migrate.current_version(c) == 4
+    assert migrate.current_version(c) == 5
     assert not c.in_transaction
 
 

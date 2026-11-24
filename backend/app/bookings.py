@@ -23,7 +23,10 @@ _EDITABLE = ("driver_id", "requester_name", "division_id", "destination", "notes
 
 _SELECT = (
     "SELECT b.*, dv.name AS division_name, d.name AS driver_name, d.vehicle_type, d.vehicle_plate, "
-    "d.is_active AS driver_is_active, a.display_name AS admin_name FROM booking b "
+    "d.is_active AS driver_is_active, a.display_name AS admin_name, "
+    "(SELECT m.status FROM telegram_message m WHERE m.booking_id = b.id ORDER BY m.id DESC LIMIT 1) AS tg_status, "
+    "(SELECT m.error_code FROM telegram_message m WHERE m.booking_id = b.id ORDER BY m.id DESC LIMIT 1) AS tg_error_code "
+    "FROM booking b "
     "JOIN driver d ON d.id = b.driver_id JOIN division dv ON dv.id = b.division_id "
     "JOIN admin a ON a.id = b.created_by_admin_id"
 )
@@ -78,7 +81,7 @@ def view(row, now):
         "updated_at": to_wib_iso(row["updated_at"]),
         "completed_at": _iso(row["completed_at"]),
         "cancelled_at": _iso(row["cancelled_at"]),
-        "telegram": None,
+        "telegram": {"status": row["tg_status"], "error_code": row["tg_error_code"]} if row["tg_status"] else None,
     }
 
 
@@ -152,6 +155,14 @@ def _get(conn, booking_id):
     return row
 
 
+def running_for_driver(conn, driver_id, now):
+    """Booking Berjalan milik driver (FR-26, M2): active dan sudah mulai."""
+    return conn.execute(
+        _SELECT + " WHERE b.driver_id = ? AND b.status = 'active' AND b.start_at <= ? ORDER BY b.start_at, b.id",
+        (driver_id, to_db(now)),
+    ).fetchall()
+
+
 def get(conn, now, booking_id):
     return view(_get(conn, booking_id), now)
 
@@ -179,7 +190,7 @@ def list_page(conn, now, day_from, day_to, driver_id, statuses, page, page_size)
     return {"items": [view(r, now) for r in rows], "page": page, "page_size": page_size, "total": total}
 
 
-def create(conn, actor, now, notifier, data):
+def create(conn, actor, now, notifier, data, *, status="active", source="web"):
     start_at, end_at = span(data["start_date"], data["start_time"], data["end_date"], data["end_time"])
     _check_not_past(start_at, now)
     with transaction(conn):
@@ -189,10 +200,11 @@ def create(conn, actor, now, notifier, data):
         cur = conn.execute(
             "INSERT INTO booking (driver_id, requester_name, division_id, destination, notes, schedule_type, "
             "start_at, end_at, status, source, created_by_admin_id, created_at, updated_at) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'active', 'web', ?, ?, ?)",
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 data["driver_id"], data["requester_name"], data["division_id"], data["destination"],
-                data.get("notes"), data["schedule_type"], start_at, end_at, actor.admin_id, stamp, stamp,
+                data.get("notes"), data["schedule_type"], start_at, end_at, status, source, actor.admin_id, stamp,
+                stamp,
             ),
         )
         booking_id = cur.lastrowid
@@ -201,10 +213,13 @@ def create(conn, actor, now, notifier, data):
             conn, actor=actor, entity_type="booking", entity_id=booking_id, action="create", now=now,
             after=_snapshot(row),
         )
-        notifier.enqueue(conn, kind="booking_created", booking_id=booking_id, driver_id=data["driver_id"], now=now)
+        telegram = notifier.enqueue(
+            conn, kind="booking_created", booking_id=booking_id, driver_id=data["driver_id"], now=now
+        )
         warnings = _driver_warnings(conn, data["driver_id"], driver)
         overlap_count = len(overlapping(conn, data["driver_id"], start_at, end_at, booking_id))
-    return {"booking": view(row, now), "overlap_count": overlap_count, "warnings": warnings}
+        row = _get(conn, booking_id)
+    return {"booking": view(row, now), "overlap_count": overlap_count, "warnings": warnings, "telegram": telegram}
 
 
 def update(conn, actor, now, notifier, booking_id, changes):
@@ -225,7 +240,7 @@ def update(conn, actor, now, notifier, booking_id, changes):
                 changes.get("end_date", cur_end.date()),
                 changes.get("end_time", cur_end.time()),
             )
-        warnings = []
+        warnings, telegram = [], None
         if after != before:
             if after["division_id"] != before["division_id"]:
                 divisions.require_active(conn, after["division_id"])
@@ -247,13 +262,21 @@ def update(conn, actor, now, notifier, booking_id, changes):
                 before=before, after=after,
             )
             if after["driver_id"] != before["driver_id"]:
-                notifier.enqueue(conn, kind="booking_cancelled", booking_id=booking_id, driver_id=before["driver_id"], now=now)
-                notifier.enqueue(conn, kind="booking_created", booking_id=booking_id, driver_id=after["driver_id"], now=now)
+                notifier.enqueue(
+                    conn, kind="booking_cancelled", booking_id=booking_id, driver_id=before["driver_id"], now=now,
+                    before=before,
+                )
+                telegram = notifier.enqueue(
+                    conn, kind="booking_created", booking_id=booking_id, driver_id=after["driver_id"], now=now
+                )
             else:
-                notifier.enqueue(conn, kind="booking_updated", booking_id=booking_id, driver_id=after["driver_id"], now=now)
+                telegram = notifier.enqueue(
+                    conn, kind="booking_updated", booking_id=booking_id, driver_id=after["driver_id"], now=now,
+                    changed=audit.changed_fields(before, after),
+                )
         overlap_count = len(overlapping(conn, after["driver_id"], after["start_at"], after["end_at"], booking_id))
         result = view(_get(conn, booking_id), now)
-    return {"booking": result, "overlap_count": overlap_count, "warnings": warnings}
+    return {"booking": result, "overlap_count": overlap_count, "warnings": warnings, "telegram": telegram}
 
 
 def cancel(conn, actor, now, notifier, booking_id):
@@ -278,10 +301,15 @@ def cancel(conn, actor, now, notifier, booking_id):
     return view(after, now)
 
 
-def complete(conn, actor, now, notifier, booking_id):
-    """Hanya booking Berjalan yang bisa ditutup. Update bersyarat: dua penutup bersamaan, satu yang berhasil."""
+def complete(conn, actor, now, notifier, booking_id, owner_driver_id=None):
+    """Hanya booking Berjalan yang bisa ditutup. Update bersyarat: dua penutup bersamaan, satu yang berhasil.
+
+    Penutupan oleh admin mengirim pesan ke driver (M3); penutupan oleh driver lewat bot tidak.
+    """
     with transaction(conn):
         row = _get(conn, booking_id)
+        if owner_driver_id is not None and row["driver_id"] != owner_driver_id:
+            raise AppError(404, "not_found", "Booking tidak ditemukan.")
         if row["status"] == "active" and row["start_at"] > to_db(now):
             raise AppError(409, "booking_not_started", "Booking yang belum berjalan hanya bisa dibatalkan.")
         stamp = to_db(now)
@@ -297,5 +325,29 @@ def complete(conn, actor, now, notifier, booking_id):
             conn, actor=actor, entity_type="booking", entity_id=booking_id, action="complete", now=now,
             before=_snapshot(row), after=_snapshot(after),
         )
-        notifier.enqueue(conn, kind="booking_completed_by_admin", booking_id=booking_id, driver_id=row["driver_id"], now=now)
+        if actor.type == "admin":
+            notifier.enqueue(
+                conn, kind="booking_completed_by_admin", booking_id=booking_id, driver_id=row["driver_id"], now=now
+            )
+    return view(after, now)
+
+
+def confirm(conn, actor, now, notifier, booking_id):
+    """Driver menjawab /oke di grup: pending menjadi active. Update bersyarat, jadi `/oke` ganda hanya sekali berhasil."""
+    with transaction(conn):
+        row = _get(conn, booking_id)
+        stamp = to_db(now)
+        cur = conn.execute(
+            "UPDATE booking SET status = 'active', ack_at = ?, updated_at = ? WHERE id = ? AND status = 'pending'",
+            (stamp, stamp, booking_id),
+        )
+        if cur.rowcount == 0:
+            raise AppError(409, "booking_not_pending", "Booking ini tidak menunggu konfirmasi.")
+        after = _get(conn, booking_id)
+        audit.write(
+            conn, actor=actor, entity_type="booking", entity_id=booking_id, action="confirm", now=now,
+            before=_snapshot(row), after=_snapshot(after),
+        )
+        notifier.enqueue(conn, kind="booking_confirmed", booking_id=booking_id, driver_id=row["driver_id"], now=now)
+        notifier.enqueue(conn, kind="booking_created", booking_id=booking_id, driver_id=row["driver_id"], now=now)
     return view(after, now)

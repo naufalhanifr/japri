@@ -51,6 +51,16 @@ def create_admin(conn, email, display_name, password, now):
     return cur.lastrowid
 
 
+def set_telegram_user(conn, email, telegram_user_id):
+    """Daftarkan akun Telegram admin agar perintah booking di grup dikenali (6.6)."""
+    with transaction(conn):
+        if conn.execute("SELECT 1 FROM admin WHERE telegram_user_id = ? AND email != ?", (telegram_user_id, normalize_email(email))).fetchone():
+            raise ValueError("Akun Telegram itu sudah terdaftar untuk admin lain.")
+        cur = conn.execute("UPDATE admin SET telegram_user_id = ? WHERE email = ?", (telegram_user_id, normalize_email(email)))
+        if cur.rowcount == 0:
+            raise ValueError("Akun admin tidak ditemukan.")
+
+
 def reset_password(conn, email, password):
     security.validate_new_password(password)
     password_hash = security.hash_password(password)

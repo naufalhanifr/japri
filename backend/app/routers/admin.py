@@ -5,6 +5,7 @@ from .. import auth
 from ..deps import client_ip, get_conn, get_now, get_settings, require_admin
 from .bookings import router as bookings_router
 from .drivers import router as drivers_router
+from .telegram import admin_router as telegram_admin_router
 
 # Satu-satunya endpoint admin tanpa sesi. Jangan menaruh route lain di router ini.
 login_router = APIRouter(prefix="/api/admin")
@@ -13,6 +14,7 @@ login_router = APIRouter(prefix="/api/admin")
 admin_router = APIRouter(prefix="/api/admin", dependencies=[Depends(require_admin)])
 admin_router.include_router(drivers_router)
 admin_router.include_router(bookings_router)
+admin_router.include_router(telegram_admin_router)
 
 
 class LoginIn(BaseModel):
