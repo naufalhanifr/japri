@@ -79,7 +79,7 @@ export function Masuk() {
 
   return (
     <main id="main" className="page page--auth" tabIndex={-1}>
-      <form className="auth-card" onSubmit={onSubmit} noValidate>
+      <form className="auth-card" method="post" onSubmit={onSubmit} noValidate>
         <div>
           <h1 className="auth-card__title">Login Admin</h1>
           <p className="auth-card__lead">Khusus admin. Pegawai tidak perlu login untuk melihat jadwal.</p>

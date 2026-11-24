@@ -36,5 +36,13 @@ describe('safeReturnPath', () => {
     expect(safeReturnPath('https://evil.example')).toBe('/')
     expect(safeReturnPath('/masuk')).toBe('/')
     expect(safeReturnPath(undefined)).toBe('/')
+    expect(safeReturnPath('/admin/booking?x=1')).toBe('/admin/booking?x=1')
   })
+
+  it.each(['/\\evil.com', '/\t/evil.com', '//evil.com', 'https://evil.com', '/masuk', '/masuk?next=/'])(
+    'rejects %j',
+    (value) => {
+      expect(safeReturnPath(value)).toBe('/')
+    },
+  )
 })

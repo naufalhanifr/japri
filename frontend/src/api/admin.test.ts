@@ -59,6 +59,43 @@ describe('adminRequest', () => {
   })
 })
 
+describe('adminRequest csrf recovery', () => {
+  it('refreshes the token via /me and retries once', async () => {
+    setCsrfToken('stale')
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(err(403, 'csrf_invalid'))
+      .mockResolvedValueOnce(json({ admin, csrf_token: 'fresh' }))
+      .mockResolvedValueOnce(json({ ok: true }))
+    vi.stubGlobal('fetch', fetchMock)
+    await expect(adminRequest('/api/admin/x', { method: 'POST' })).resolves.toEqual({ ok: true })
+    expect(fetchMock.mock.calls.map((c) => c[0])).toEqual(['/api/admin/x', '/api/admin/me', '/api/admin/x'])
+    expect((fetchMock.mock.calls[0][1] as { headers: Record<string, string> }).headers['X-CSRF-Token']).toBe('stale')
+    expect((fetchMock.mock.calls[2][1] as { headers: Record<string, string> }).headers['X-CSRF-Token']).toBe('fresh')
+    expect(lost).not.toHaveBeenCalled()
+  })
+
+  it('reports a lost session when /me answers 401', async () => {
+    const fetchMock = vi.fn().mockResolvedValueOnce(err(403, 'csrf_invalid')).mockResolvedValueOnce(err(401, 'session_expired'))
+    vi.stubGlobal('fetch', fetchMock)
+    await expect(adminRequest('/api/admin/x', { method: 'POST' })).rejects.toMatchObject({ kind: 'unauthenticated' })
+    expect(lost).toHaveBeenCalledTimes(1)
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+  })
+
+  it('does not retry a second time when the retry is also 403', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(err(403, 'csrf_invalid'))
+      .mockResolvedValueOnce(json({ admin, csrf_token: 'fresh' }))
+      .mockResolvedValueOnce(err(403, 'csrf_invalid'))
+    vi.stubGlobal('fetch', fetchMock)
+    await expect(adminRequest('/api/admin/x', { method: 'POST' })).rejects.toMatchObject({ kind: 'csrf' })
+    expect(fetchMock).toHaveBeenCalledTimes(3)
+    expect(lost).not.toHaveBeenCalled()
+  })
+})
+
 describe('login, me, logout', () => {
   it('does not treat a wrong password as an expired session', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => err(401, 'invalid_credentials')))

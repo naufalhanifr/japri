@@ -26,15 +26,36 @@ export function setSessionLostHandler(handler: (() => void) | null) {
   onSessionLost = handler
 }
 
-// Klien bersama untuk semua route admin: cookie sesi, token CSRF di POST/PATCH, dan 401 -> S12.
+// Klien bersama untuk semua route admin: cookie sesi, token CSRF di POST/PATCH, 401 -> S12, dan satu kali pemulihan 403 csrf_invalid.
 export async function adminRequest<T>(path: string, options: AdminRequestOptions = {}): Promise<T> {
   const { method = 'GET', params, body, signal, sessionRequired = true } = options
-  const headers: Record<string, string> = {}
-  if (method !== 'GET' && csrfToken) headers['X-CSRF-Token'] = csrfToken
-  try {
-    return await requestJson<T>(path, { method, params, body, signal, headers })
-  } catch (error) {
+  const send = () => {
+    const headers: Record<string, string> = {}
+    if (method !== 'GET' && csrfToken) headers['X-CSRF-Token'] = csrfToken
+    return requestJson<T>(path, { method, params, body, signal, headers })
+  }
+  const reportIfSessionLost = (error: unknown) => {
     if (sessionRequired && error instanceof ApiError && error.kind === 'unauthenticated') onSessionLost?.()
+  }
+  try {
+    return await send()
+  } catch (error) {
+    if (!(error instanceof ApiError && error.kind === 'csrf')) {
+      reportIfSessionLost(error)
+      throw error
+    }
+  }
+  try {
+    const session = await requestJson<AdminSessionBody>('/api/admin/me', { signal })
+    csrfToken = session.csrf_token
+  } catch (error) {
+    reportIfSessionLost(error)
+    throw error
+  }
+  try {
+    return await send()
+  } catch (error) {
+    reportIfSessionLost(error)
     throw error
   }
 }

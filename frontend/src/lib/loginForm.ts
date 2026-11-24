@@ -20,7 +20,8 @@ export function waitLabel(seconds: number): string {
 }
 
 export function safeReturnPath(value: unknown): string {
-  return typeof value === 'string' && value.startsWith('/') && !value.startsWith('//') && !value.startsWith('/masuk')
-    ? value
-    : '/'
+  if (typeof value !== 'string' || !value.startsWith('/')) return '/'
+  const url = new URL(value, window.location.origin)
+  if (url.origin !== window.location.origin || url.pathname.startsWith('/masuk')) return '/'
+  return url.pathname + url.search
 }
