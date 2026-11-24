@@ -72,6 +72,55 @@ def test_range_validation(session, driver, division_id, patch, code):
     assert error(post(session, booking_body(driver["id"], division_id, **patch))) == (422, code)
 
 
+EXTREME = ("0001-01-01", "9999-12-31", "1999-12-31", "2101-01-01")
+
+
+@pytest.mark.parametrize("day", EXTREME)
+@pytest.mark.parametrize("field", ["start_date", "end_date"])
+def test_create_rejects_dates_outside_bounds(session, conn, driver, division_id, field, day):
+    body = booking_body(driver["id"], division_id, **{field: day})
+    assert error(post(session, body)) == (422, "date_out_of_bounds")
+    assert conn.execute("SELECT COUNT(*) FROM booking").fetchone()[0] == 0
+    assert audit_rows(conn) == []
+
+
+@pytest.mark.parametrize("day", EXTREME)
+@pytest.mark.parametrize("field", ["start_date", "end_date"])
+def test_edit_rejects_dates_outside_bounds(session, conn, driver, division_id, field, day):
+    client, csrf = session
+    b = make_booking(session, driver["id"], division_id)["booking"]
+    r = client.patch(f"/api/admin/bookings/{b['id']}", json={field: day}, headers=hdr(csrf))
+    assert error(r) == (422, "date_out_of_bounds")
+    assert len(audit_rows(conn)) == 1
+
+
+@pytest.mark.parametrize("day", EXTREME)
+@pytest.mark.parametrize("field", ["date", "from", "to"])
+def test_list_rejects_dates_outside_bounds(session, field, day):
+    client, _ = session
+    params = {field: day}
+    if field != "date":
+        params = {"from": "2026-11-23", "to": "2026-11-23", **params}
+    r = client.get("/api/admin/bookings", params=params)
+    assert error(r) == (422, "date_out_of_bounds")
+    assert r.json()["error"]["details"][0]["field"] == field
+
+
+@pytest.mark.parametrize("day", EXTREME)
+@pytest.mark.parametrize("field", ["start_date", "end_date"])
+def test_overlap_check_rejects_dates_outside_bounds(session, driver, field, day):
+    client, _ = session
+    q = {"driver_id": driver["id"], "start_date": "2026-11-23", "end_date": "2026-11-23", "start_time": "14:00", "end_time": "16:00"}
+    r = client.get("/api/admin/bookings/overlap-check", params={**q, field: day})
+    assert error(r) == (422, "date_out_of_bounds")
+
+
+def test_bound_dates_themselves_are_accepted(session):
+    client, _ = session
+    for day in ("2000-01-01", "2100-12-31"):
+        assert client.get("/api/admin/bookings", params={"date": day}).status_code == 200
+
+
 def test_unknown_inactive_driver(session, driver, division_id):
     assert error(post(session, booking_body(999, division_id))) == (404, "driver_not_found")
     session[0].patch(f"/api/admin/drivers/{driver['id']}", json={"is_active": False}, headers=hdr(session[1]))

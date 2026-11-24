@@ -53,9 +53,9 @@ Semua route berikut juga wajib sesi, dan yang mengubah data wajib CSRF.
 | `POST /api/admin/drivers` | 201; `command_alias` kosong dibuat otomatis dari nama; 422 `alias_invalid`, `alias_taken` |
 | `PATCH /api/admin/drivers/{id}` | parsial; `is_active`, `is_on_leave`; menonaktifkan driver yang punya booking aktif menambah warning `has_open_bookings`, booking tidak dibatalkan otomatis; tanpa perubahan nilai tidak ada audit |
 | `GET /api/admin/divisions` | Divisi aktif untuk dropdown |
-| `GET /api/admin/bookings?date=` atau `from=&to=`, `driver_id`, `status` (berulang), `page`, `page_size` | daftar jadwal; default hari ini; booking `menunggu_konfirmasi` tampil dengan `status_label` |
-| `GET /api/admin/bookings/overlap-check` | `{count, bookings}` untuk peringatan sebelum simpan; `exclude_booking_id` untuk edit |
-| `POST /api/admin/bookings` | 201 `{booking, overlap_count, warnings}`; warning `driver_on_leave`, `driver_not_linked`; bentrok tidak menolak (FR-4); 422 `booking_in_past`, `division_invalid`, `invalid_range`, `range_too_long`, `driver_inactive`; 404 `driver_not_found` |
+| `GET /api/admin/bookings?date=` atau `from=&to=`, `driver_id`, `status` (berulang), `page`, `page_size` | daftar jadwal; default hari ini; tanggal di luar 2000-01-01 sampai 2100-12-31 ditolak 422 `date_out_of_bounds` (juga di POST/PATCH booking dan overlap-check); booking `menunggu_konfirmasi` tampil dengan `status_label` |
+| `GET /api/admin/bookings/overlap-check` | `{count, bookings}` untuk peringatan sebelum simpan; 422 `date_out_of_bounds`; `exclude_booking_id` untuk edit |
+| `POST /api/admin/bookings` | 201 `{booking, overlap_count, warnings}`; warning `driver_on_leave`, `driver_not_linked`; bentrok tidak menolak (FR-4); 422 `booking_in_past`, `division_invalid`, `invalid_range`, `range_too_long`, `date_out_of_bounds`, `driver_inactive`; 404 `driver_not_found` |
 | `PATCH /api/admin/bookings/{id}` | parsial; booking selesai tetap berstatus selesai; 409 `booking_cancelled`; tanpa perubahan nilai tidak ada audit |
 | `POST /api/admin/bookings/{id}/cancel` | 409 `booking_completed` atau `booking_not_active` |
 | `POST /api/admin/bookings/{id}/complete` | hanya booking berjalan; 409 `booking_not_started` atau `booking_not_active` |

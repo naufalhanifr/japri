@@ -2,14 +2,13 @@
 pemakaian ulang view admin, jadi kolom baru (mis. phone) tidak bisa ikut keluar tanpa disengaja."""
 
 import threading
-from datetime import date, timedelta
+from datetime import timedelta
 
 from . import bookings
+from .bookings import check_date
 from .errors import AppError
 from .timeutil import to_db, to_wib_iso, wib_date, wib_day_range_utc
 
-MIN_DATE = date(2000, 1, 1)
-MAX_DATE = date(2100, 12, 31)
 RECENT_HISTORY_SIZE = 5
 
 _FROM = " FROM booking b JOIN driver d ON d.id = b.driver_id JOIN division dv ON dv.id = b.division_id"
@@ -24,11 +23,6 @@ _HISTORY_STATUS = {"selesai": "completed", "dibatalkan": "cancelled"}
 
 def _bad(code, message, field=None):
     return AppError(422, code, message, [{"field": field, "reason": code}] if field else [])
-
-
-def check_date(value, field):
-    if not MIN_DATE <= value <= MAX_DATE:
-        raise _bad("date_out_of_bounds", f"Tanggal harus antara {MIN_DATE} dan {MAX_DATE}.", field)
 
 
 def resolve_range(now, date_, from_, to):

@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 from . import audit, divisions
 from .db import transaction
@@ -6,6 +6,8 @@ from .errors import AppError
 from .timeutil import WIB, from_db, to_db, to_wib_iso, wib_date, wib_day_range_utc
 
 MAX_RANGE = timedelta(days=366)
+MIN_DATE = date(2000, 1, 1)
+MAX_DATE = date(2100, 12, 31)
 STATUS_LABELS = {
     "terjadwal": "Terjadwal",
     "berjalan": "Berjalan",
@@ -88,8 +90,15 @@ def _bad_request(code, message, field=None):
     return AppError(422, code, message, [{"field": field, "reason": code}] if field else [])
 
 
+def check_date(value, field):
+    if not MIN_DATE <= value <= MAX_DATE:
+        raise _bad_request("date_out_of_bounds", f"Tanggal harus antara {MIN_DATE} dan {MAX_DATE}.", field)
+
+
 def span(start_date, start_time, end_date, end_time):
     """Tanggal dan jam WIB dari admin menjadi (start, end) UTC. Rentang menerus, kedua tipe jadwal sama."""
+    check_date(start_date, "start_date")
+    check_date(end_date, "end_date")
     start = datetime.combine(start_date, start_time.replace(second=0, microsecond=0), tzinfo=WIB)
     end = datetime.combine(end_date, end_time.replace(second=0, microsecond=0), tzinfo=WIB)
     if end <= start:
