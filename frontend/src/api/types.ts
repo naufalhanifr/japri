@@ -53,3 +53,14 @@ export interface OpenBookingsData {
   driver: PublicDriver
   bookings: PublicBooking[]
 }
+
+export interface DriverOption extends PublicDriver {
+  is_active: boolean
+}
+
+export interface HistoryPage {
+  items: PublicBooking[]
+  page: number
+  page_size: number
+  total: number
+}

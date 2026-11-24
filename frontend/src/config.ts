@@ -4,3 +4,5 @@ export const POLL_INTERVAL_MS = Number.isFinite(fromEnv) && fromEnv >= 1000 ? fr
 export const MAX_RANGE_DAYS = 31
 export const DEFAULT_HOUR_START = 8
 export const DEFAULT_HOUR_END = 17
+export const HISTORY_MAX_RANGE_DAYS = 366
+export const HISTORY_PAGE_SIZE = 20
