@@ -3,12 +3,16 @@ from pydantic import BaseModel, Field
 
 from .. import auth
 from ..deps import client_ip, get_conn, get_now, get_settings, require_admin
+from .bookings import router as bookings_router
+from .drivers import router as drivers_router
 
 # Satu-satunya endpoint admin tanpa sesi. Jangan menaruh route lain di router ini.
 login_router = APIRouter(prefix="/api/admin")
 
 # Default tolak: semua route di router ini wajib sesi admin, dan request ubah data wajib CSRF.
 admin_router = APIRouter(prefix="/api/admin", dependencies=[Depends(require_admin)])
+admin_router.include_router(drivers_router)
+admin_router.include_router(bookings_router)
 
 
 class LoginIn(BaseModel):

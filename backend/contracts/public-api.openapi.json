@@ -1,0 +1,758 @@
+{
+  "components": {
+    "schemas": {
+      "BookingPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PublicBooking"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "page_size": {
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "page_size",
+          "total"
+        ],
+        "title": "BookingPage",
+        "type": "object"
+      },
+      "Dashboard": {
+        "properties": {
+          "drivers": {
+            "items": {
+              "$ref": "#/components/schemas/DriverCard"
+            },
+            "title": "Drivers",
+            "type": "array"
+          },
+          "generated_at": {
+            "title": "Generated At",
+            "type": "string"
+          },
+          "range": {
+            "$ref": "#/components/schemas/DashboardRange"
+          },
+          "recent_history": {
+            "items": {
+              "$ref": "#/components/schemas/PublicBooking"
+            },
+            "title": "Recent History",
+            "type": "array"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/DashboardSummary"
+          },
+          "timeline": {
+            "$ref": "#/components/schemas/Timeline"
+          }
+        },
+        "required": [
+          "generated_at",
+          "range",
+          "summary",
+          "drivers",
+          "timeline",
+          "recent_history"
+        ],
+        "title": "Dashboard",
+        "type": "object"
+      },
+      "DashboardRange": {
+        "properties": {
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "includes_today": {
+            "title": "Includes Today",
+            "type": "boolean"
+          },
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date",
+          "includes_today"
+        ],
+        "title": "DashboardRange",
+        "type": "object"
+      },
+      "DashboardSummary": {
+        "properties": {
+          "on_leave": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "On Leave"
+          },
+          "running": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Running"
+          },
+          "standby": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Standby"
+          },
+          "total_trips": {
+            "title": "Total Trips",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "running",
+          "standby",
+          "on_leave",
+          "total_trips"
+        ],
+        "title": "DashboardSummary",
+        "type": "object"
+      },
+      "DriverCard": {
+        "properties": {
+          "current": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicBooking"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "driver": {
+            "$ref": "#/components/schemas/PublicDriver"
+          },
+          "next": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicBooking"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "open_bookings_count": {
+            "title": "Open Bookings Count",
+            "type": "integer"
+          },
+          "running_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Running Count"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "enum": [
+                  "sedang_jalan",
+                  "standby",
+                  "cuti"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "State"
+          }
+        },
+        "required": [
+          "driver",
+          "state",
+          "open_bookings_count",
+          "current",
+          "running_count",
+          "next"
+        ],
+        "title": "DriverCard",
+        "type": "object"
+      },
+      "DriverOption": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "vehicle_plate": {
+            "title": "Vehicle Plate",
+            "type": "string"
+          },
+          "vehicle_type": {
+            "title": "Vehicle Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "vehicle_type",
+          "vehicle_plate",
+          "is_active"
+        ],
+        "title": "DriverOption",
+        "type": "object"
+      },
+      "DriverOptions": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DriverOption"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "DriverOptions",
+        "type": "object"
+      },
+      "OpenBookings": {
+        "properties": {
+          "bookings": {
+            "items": {
+              "$ref": "#/components/schemas/PublicBooking"
+            },
+            "title": "Bookings",
+            "type": "array"
+          },
+          "driver": {
+            "$ref": "#/components/schemas/PublicDriver"
+          }
+        },
+        "required": [
+          "driver",
+          "bookings"
+        ],
+        "title": "OpenBookings",
+        "type": "object"
+      },
+      "PublicBooking": {
+        "properties": {
+          "destination": {
+            "title": "Destination",
+            "type": "string"
+          },
+          "division": {
+            "title": "Division",
+            "type": "string"
+          },
+          "driver": {
+            "$ref": "#/components/schemas/PublicDriver"
+          },
+          "end_at": {
+            "title": "End At",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "overdue": {
+            "title": "Overdue",
+            "type": "boolean"
+          },
+          "requester_name": {
+            "title": "Requester Name",
+            "type": "string"
+          },
+          "schedule_type": {
+            "enum": [
+              "per_jam",
+              "full_day"
+            ],
+            "title": "Schedule Type",
+            "type": "string"
+          },
+          "start_at": {
+            "title": "Start At",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "terjadwal",
+              "berjalan",
+              "selesai",
+              "dibatalkan"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "driver",
+          "requester_name",
+          "division",
+          "destination",
+          "notes",
+          "schedule_type",
+          "start_at",
+          "end_at",
+          "status",
+          "overdue"
+        ],
+        "title": "PublicBooking",
+        "type": "object"
+      },
+      "PublicDriver": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "vehicle_plate": {
+            "title": "Vehicle Plate",
+            "type": "string"
+          },
+          "vehicle_type": {
+            "title": "Vehicle Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "vehicle_type",
+          "vehicle_plate"
+        ],
+        "title": "PublicDriver",
+        "type": "object"
+      },
+      "Timeline": {
+        "properties": {
+          "end_date": {
+            "title": "End Date",
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/TimelineItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "start_date": {
+            "title": "Start Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date",
+          "items"
+        ],
+        "title": "Timeline",
+        "type": "object"
+      },
+      "TimelineItem": {
+        "properties": {
+          "bookings": {
+            "items": {
+              "$ref": "#/components/schemas/PublicBooking"
+            },
+            "title": "Bookings",
+            "type": "array"
+          },
+          "driver_id": {
+            "title": "Driver Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "driver_id",
+          "bookings"
+        ],
+        "title": "TimelineItem",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "Japri API publik (read-only)",
+    "version": "1"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/public/dashboard": {
+      "get": {
+        "operationId": "get_dashboard_api_public_dashboard_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "From"
+            }
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "To"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dashboard"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Dashboard"
+      }
+    },
+    "/api/public/drivers": {
+      "get": {
+        "operationId": "get_drivers_api_public_drivers_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DriverOptions"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Drivers"
+      }
+    },
+    "/api/public/drivers/{driver_id}/open-bookings": {
+      "get": {
+        "operationId": "get_open_bookings_api_public_drivers__driver_id__open_bookings_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "driver_id",
+            "required": true,
+            "schema": {
+              "title": "Driver Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenBookings"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Open Bookings"
+      }
+    },
+    "/api/public/history": {
+      "get": {
+        "operationId": "get_history_api_public_history_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "driver_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Driver Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "From"
+            }
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "To"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "selesai",
+                    "dibatalkan"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "maximum": 100000,
+              "minimum": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "minimum": 1,
+              "title": "Page Size",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get History"
+      }
+    },
+    "/api/public/schedule": {
+      "get": {
+        "operationId": "get_schedule_api_public_schedule_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "from",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "title": "From",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "title": "To",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "driver_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Driver Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "maximum": 100000,
+              "minimum": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "minimum": 1,
+              "title": "Page Size",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Schedule"
+      }
+    }
+  }
+}

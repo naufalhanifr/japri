@@ -18,6 +18,10 @@ def get_now(request: Request):
     return request.app.state.clock()
 
 
+def get_notifier(request: Request):
+    return request.app.state.notifier
+
+
 def get_conn(request: Request):
     conn = connect(request.app.state.settings.db_path)
     try:
@@ -36,6 +40,16 @@ def client_ip(request: Request, settings):
         except ValueError:
             pass
     return peer
+
+
+def get_public_conn(request: Request):
+    """Koneksi khusus endpoint publik: menolak semua tulis di tingkat database (FR-6)."""
+    conn = connect(request.app.state.settings.db_path)
+    conn.execute("PRAGMA query_only=ON")
+    try:
+        yield conn
+    finally:
+        conn.close()
 
 
 def require_admin(
